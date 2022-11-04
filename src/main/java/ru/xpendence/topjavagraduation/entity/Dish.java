@@ -22,6 +22,9 @@ public class Dish {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "active")
+    private Boolean active;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
