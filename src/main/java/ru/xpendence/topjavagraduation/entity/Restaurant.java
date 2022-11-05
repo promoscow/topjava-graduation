@@ -19,6 +19,6 @@ public class Restaurant {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     private List<Dish> dishes;
 }
