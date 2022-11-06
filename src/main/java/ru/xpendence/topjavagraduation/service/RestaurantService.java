@@ -1,8 +1,8 @@
 package ru.xpendence.topjavagraduation.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
-
-import java.util.List;
 
 public interface RestaurantService {
 
@@ -12,7 +12,7 @@ public interface RestaurantService {
 
     Restaurant get(Long id);
 
-    List<Restaurant> getAll(); // TODO: 05.11.2022 пагинация, сортировка, фильтрация
+    Page<Restaurant> getAll(Pageable pageable);
 
     void delete(Long id);
 }
