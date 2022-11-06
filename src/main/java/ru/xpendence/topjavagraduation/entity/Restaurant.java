@@ -21,4 +21,8 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     private List<Dish> dishes;
+
+    public static void enrichForUpdate(Restaurant forUpdate, Restaurant stored) {
+        stored.name = forUpdate.name;
+    }
 }

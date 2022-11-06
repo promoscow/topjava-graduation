@@ -25,7 +25,13 @@ public class Dish {
     @Column(name = "active")
     private Boolean active;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
+    public static void enrichForUpdate(Dish forUpdate, Dish stored) {
+        stored.name = forUpdate.name;
+        stored.price = forUpdate.price;
+        stored.active = forUpdate.active;
+    }
 }

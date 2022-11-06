@@ -12,7 +12,7 @@ public interface DishService {
 
     Dish get(Long id);
 
-    List<Dish> getAllByRestaurantId(Long restaurantId);
+    List<Dish> getAllByRestaurantId(Long restaurantId); // TODO: 07.11.2022 пагинация?
 
     void delete(Long id);
 }

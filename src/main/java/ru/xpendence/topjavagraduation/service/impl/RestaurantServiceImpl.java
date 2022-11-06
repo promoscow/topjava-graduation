@@ -31,11 +31,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (Objects.isNull(restaurant.getId())) {
             throw new IllegalArgumentException("Restaurant id is null.");
         }
-        Restaurant stored = repository.findById(restaurant.getId())
+        var stored = repository.findById(restaurant.getId())
                 .orElseThrow(() ->
                         new NoSuchElementException(String.format("Restaurant not found by id: %d", restaurant.getId()))
                 );
-        stored.setName(restaurant.getName());
+        Restaurant.enrichForUpdate(restaurant, stored);
         repository.save(stored);
     }
 
