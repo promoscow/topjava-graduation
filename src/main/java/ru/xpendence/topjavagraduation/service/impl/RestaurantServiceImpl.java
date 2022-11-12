@@ -1,6 +1,5 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository repository;
 
-    @Autowired
     public RestaurantServiceImpl(RestaurantRepository repository) {
         this.repository = repository;
     }
@@ -40,7 +38,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant get(Long id) {
+    public Restaurant getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Restaurant not found by id: %d", id)));
     }

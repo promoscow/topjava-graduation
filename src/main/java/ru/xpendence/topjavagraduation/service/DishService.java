@@ -10,7 +10,7 @@ public interface DishService {
 
     void update(Dish dish);
 
-    Dish get(Long id);
+    Dish getById(Long id);
 
     List<Dish> getAllByRestaurantId(Long restaurantId); // TODO: 07.11.2022 пагинация?
 

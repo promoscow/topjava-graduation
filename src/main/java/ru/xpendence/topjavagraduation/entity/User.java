@@ -29,4 +29,8 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
     private List<Role> roles;
+
+    public static void enrichForUpdate(User forUpdate, User stored) {
+        stored.password = forUpdate.password;
+    }
 }

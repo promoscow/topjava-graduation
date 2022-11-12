@@ -8,7 +8,11 @@ public interface UserService {
 
     void update(User user);
 
-    User get(Long id);
+    User getById(Long id);
+
+    void addRole(Long id, Long roleId);
+
+    void removeRole(Long id, Long roleId);
 
     void delete(Long id);
 }

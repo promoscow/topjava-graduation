@@ -1,8 +1,10 @@
 package ru.xpendence.topjavagraduation.service;
 
+import ru.xpendence.topjavagraduation.entity.Role;
+
+import java.util.List;
+
 public interface RoleService {
 
-    void bind(Long id, Long userId);
-
-    void unbind(Long id, Long userId);
+    List<Role> getAll();
 }

@@ -10,9 +10,11 @@ public interface RestaurantService {
 
     void update(Restaurant restaurant);
 
-    Restaurant get(Long id);
+    Restaurant getById(Long id);
 
     Page<Restaurant> getAll(Pageable pageable);
+
+    // TODO: 12.11.2022 получить выбранный
 
     void delete(Long id);
 }

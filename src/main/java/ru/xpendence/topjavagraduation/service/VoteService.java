@@ -8,5 +8,5 @@ public interface VoteService {
 
     void update(Vote vote);
 
-    Vote get(Long id);
+    Vote getById(Long id);
 }

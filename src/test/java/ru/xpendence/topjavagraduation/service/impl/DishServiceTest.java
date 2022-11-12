@@ -36,13 +36,13 @@ class DishServiceTest extends AbstractTest {
         var newName = RandomStringUtils.randomAlphabetic(16);
         dish.setName(newName);
         service.update(dish);
-        assertEquals(newName, service.get(dish.getId()).getName());
+        assertEquals(newName, service.getById(dish.getId()).getName());
     }
 
     @Test
     void get() {
         var dish = dataBuilder.saveDish(restaurant);
-        assertDoesNotThrow(() -> service.get(dish.getId()));
+        assertDoesNotThrow(() -> service.getById(dish.getId()));
     }
 
     @Test
@@ -55,6 +55,6 @@ class DishServiceTest extends AbstractTest {
     void delete() {
         var dish = dataBuilder.saveDish(restaurant);
         service.delete(dish.getId());
-        assertThrows(NoSuchElementException.class, () -> service.get(dish.getId()));
+        assertThrows(NoSuchElementException.class, () -> service.getById(dish.getId()));
     }
 }

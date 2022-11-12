@@ -1,6 +1,5 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.xpendence.topjavagraduation.entity.Dish;
 import ru.xpendence.topjavagraduation.repository.DishRepository;
@@ -15,7 +14,6 @@ public class DishServiceImpl implements DishService {
 
     private final DishRepository repository;
 
-    @Autowired
     public DishServiceImpl(DishRepository repository) {
         this.repository = repository;
     }
@@ -37,7 +35,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Dish get(Long id) {
+    public Dish getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Dish not found by id: %d", id)));
     }

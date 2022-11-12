@@ -19,11 +19,16 @@ public class Vote {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
+    public static void enrichForUpdate(Vote forUpdate, Vote stored) {
+        stored.date = LocalDate.now();
+        stored.restaurant = forUpdate.restaurant;
+    }
 }
