@@ -6,6 +6,7 @@ import ru.xpendence.topjavagraduation.repository.RoleRepository;
 import ru.xpendence.topjavagraduation.service.RoleService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -14,6 +15,12 @@ public class RoleServiceImpl implements RoleService {
 
     public RoleServiceImpl(RoleRepository repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public Role getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Role not found by id: %d", id)));
     }
 
     @Override

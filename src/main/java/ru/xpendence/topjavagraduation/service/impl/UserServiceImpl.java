@@ -1,8 +1,10 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.topjavagraduation.entity.User;
 import ru.xpendence.topjavagraduation.repository.UserRepository;
+import ru.xpendence.topjavagraduation.service.RoleService;
 import ru.xpendence.topjavagraduation.service.UserService;
 
 import java.util.NoSuchElementException;
@@ -12,9 +14,11 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, RoleService roleService) {
         this.repository = repository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -40,13 +44,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void addRole(Long id, Long roleId) {
-        repository.addRole(id, roleId);
+        var role = roleService.getById(roleId);
+        var user = getById(id);
+        user.getRoles().add(role);
     }
 
     @Override
+    @Transactional
     public void removeRole(Long id, Long roleId) {
-        repository.removeRole(id, roleId);
+        var role = roleService.getById(roleId);
+        var user = getById(id);
+        user.getRoles().remove(role);
     }
 
     @Override
