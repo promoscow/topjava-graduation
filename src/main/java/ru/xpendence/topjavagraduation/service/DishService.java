@@ -1,8 +1,8 @@
 package ru.xpendence.topjavagraduation.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.xpendence.topjavagraduation.entity.Dish;
-
-import java.util.List;
 
 public interface DishService {
 
@@ -12,7 +12,7 @@ public interface DishService {
 
     Dish getById(Long id);
 
-    List<Dish> getAllByRestaurantId(Long restaurantId); // TODO: 07.11.2022 пагинация?
+    Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable);
 
     void delete(Long id);
 }

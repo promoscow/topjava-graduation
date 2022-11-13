@@ -8,5 +8,7 @@ public interface RestaurantController {
 
     RestaurantResponse create(RestaurantRequest request);
 
+    RestaurantResponse get(Long id);
+
     Page<RestaurantResponse> getAll(Integer page, Integer size);
 }

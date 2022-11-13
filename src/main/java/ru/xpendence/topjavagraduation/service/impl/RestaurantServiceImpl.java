@@ -44,6 +44,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Restaurant getByDishId(Long dishId) {
+        return repository.getByDishId(dishId)
+                .orElseThrow(
+                        () -> new NoSuchElementException(String.format("Restaurant not found by dish id: %d", dishId))
+                );
+    }
+
+    @Override
     public Page<Restaurant> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }

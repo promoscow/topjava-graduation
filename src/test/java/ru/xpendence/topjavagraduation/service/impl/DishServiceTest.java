@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import ru.xpendence.topjavagraduation.AbstractTest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.service.DishService;
@@ -48,7 +49,7 @@ class DishServiceTest extends AbstractTest {
     @Test
     void getAllByRestaurantId() {
         dataBuilder.saveDish(restaurant);
-        assertFalse(service.getAllByRestaurantId(restaurant.getId()).isEmpty());
+        assertFalse(service.getAllByRestaurantId(restaurant.getId(), Pageable.unpaged()).isEmpty());
     }
 
     @Test

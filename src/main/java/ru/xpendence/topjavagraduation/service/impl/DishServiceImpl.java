@@ -1,11 +1,12 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.xpendence.topjavagraduation.entity.Dish;
 import ru.xpendence.topjavagraduation.repository.DishRepository;
 import ru.xpendence.topjavagraduation.service.DishService;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -41,8 +42,8 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> getAllByRestaurantId(Long restaurantId) {
-        return repository.getAllByRestaurantId(restaurantId);
+    public Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable) {
+        return repository.getAllByRestaurantId(restaurantId, pageable);
     }
 
     @Override

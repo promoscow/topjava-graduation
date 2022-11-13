@@ -12,6 +12,8 @@ public interface RestaurantService {
 
     Restaurant getById(Long id);
 
+    Restaurant getByDishId(Long dishId);
+
     Page<Restaurant> getAll(Pageable pageable);
 
     // TODO: 12.11.2022 получить выбранный

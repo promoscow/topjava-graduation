@@ -37,6 +37,13 @@ public class RestaurantControllerImpl implements RestaurantController {
     }
 
     @Override
+    @GetMapping("/{id}")
+    @Operation(summary = "Получение ресторана")
+    public RestaurantResponse get(@PathVariable Long id) {
+        return mapper.toResponse(service.getById(id));
+    }
+
+    @Override
     @Operation(summary = "Получение всех ресторанов")
     @GetMapping("/all")
     public Page<RestaurantResponse> getAll(
@@ -47,4 +54,6 @@ public class RestaurantControllerImpl implements RestaurantController {
             Integer size) {
         return service.getAll(pageableMapper.toPageable(page, size)).map(mapper::toResponse);
     }
+
+
 }
