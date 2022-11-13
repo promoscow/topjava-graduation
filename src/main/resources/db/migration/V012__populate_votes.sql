@@ -4,3 +4,5 @@ values (1, current_date(), 1, 1),
        (3, current_date(), 3, 3),
        (4, current_date(), 4, 3),
        (5, current_date(), 5, 3);
+
+alter sequence votes_seq restart with 6;
