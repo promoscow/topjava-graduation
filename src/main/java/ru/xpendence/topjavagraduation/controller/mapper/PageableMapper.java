@@ -9,7 +9,7 @@ import java.util.Objects;
 @Component
 public class PageableMapper {
 
-    private final static int PAGE_DEFAULT = 1;
+    private final static int PAGE_DEFAULT = 0;
     private final static int SIZE_DEFAULT = 10;
 
     public Pageable toPageable(Integer page, Integer size) {
