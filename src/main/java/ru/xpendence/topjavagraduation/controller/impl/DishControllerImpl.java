@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,22 +34,46 @@ public class DishControllerImpl implements DishController {
     @Override
     @PostMapping
     @Operation(summary = "Создание блюда")
-    public DishResponse create(@RequestBody DishCreateRequest request) {
+    public DishResponse create(
+            @Parameter(description = "Запрос на добавление блюда")
+            @RequestBody
+            DishCreateRequest request
+    ) {
         return mapper.toResponse(service.create(mapper.toDish(request)));
     }
 
     @Override
     @PutMapping
     @Operation(summary = "Обновление блюда")
-    public HttpStatus update(@RequestBody DishUpdateRequest request) {
+    public HttpStatus update(
+            @Parameter(description = "Запрос на обновление блюда")
+            @RequestBody
+            DishUpdateRequest request
+    ) {
         service.update(mapper.toDish(request));
+        return HttpStatus.OK;
+    }
+
+    @Override
+    @PutMapping("/reset/restaurant/{restaurantId}")
+    @Operation(summary = "Сброс меню для ресторана")
+    public HttpStatus resetMenu(
+            @Parameter(description = "ID ресторана")
+            @PathVariable
+            Long restaurantId
+    ) {
+        service.resetMenu(restaurantId);
         return HttpStatus.OK;
     }
 
     @Override
     @GetMapping("/{id}")
     @Operation(summary = "Получение блюда по ID")
-    public DishResponse get(@PathVariable Long id) {
+    public DishResponse get(
+            @Parameter(description = "ID блюда")
+            @PathVariable
+            Long id
+    ) {
         return mapper.toResponse(service.getById(id));
     }
 
@@ -56,12 +81,15 @@ public class DishControllerImpl implements DishController {
     @GetMapping("/all/restaurant/{restaurantId}")
     @Operation(summary = "Получение блюд ресторана по ID ресторана")
     public Page<DishResponse> getAllByRestaurantId(
+            @Parameter(description = "ID ресторана")
             @PathVariable
             Long restaurantId,
 
+            @Parameter(description = "Номер страницы")
             @RequestParam(required = false)
             Integer page,
 
+            @Parameter(description = "Размер страницы")
             @RequestParam(required = false)
             Integer size
     ) {

@@ -36,6 +36,11 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public void resetMenu(Long restaurantId) {
+        repository.setActiveFalseForAllByRestaurantId(restaurantId);
+    }
+
+    @Override
     public Dish getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Dish not found by id: %d", id)));

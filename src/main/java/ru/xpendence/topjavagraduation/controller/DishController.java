@@ -12,6 +12,8 @@ public interface DishController {
 
     HttpStatus update(DishUpdateRequest request);
 
+    HttpStatus resetMenu(Long restaurantId);
+
     DishResponse get(Long id);
 
     Page<DishResponse> getAllByRestaurantId(Long restaurantId, Integer page, Integer size);

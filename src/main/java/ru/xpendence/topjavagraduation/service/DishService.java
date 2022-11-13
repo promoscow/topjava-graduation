@@ -10,6 +10,8 @@ public interface DishService {
 
     void update(Dish dish);
 
+    void resetMenu(Long restaurantId);
+
     Dish getById(Long id);
 
     Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable);
