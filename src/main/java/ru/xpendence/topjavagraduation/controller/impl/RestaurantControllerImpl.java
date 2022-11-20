@@ -44,6 +44,13 @@ public class RestaurantControllerImpl implements RestaurantController {
     }
 
     @Override
+    @GetMapping("/chosen")
+    @Operation(summary = "Получение выбранного ресторана")
+    public RestaurantResponse getChosen() {
+        return mapper.toResponse(service.getChosen());
+    }
+
+    @Override
     @Operation(summary = "Получение всех ресторанов")
     @GetMapping("/all")
     public Page<RestaurantResponse> getAll(

@@ -5,11 +5,16 @@ import ru.xpendence.topjavagraduation.entity.Vote;
 import ru.xpendence.topjavagraduation.repository.VoteRepository;
 import ru.xpendence.topjavagraduation.service.VoteService;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
 public class VoteServiceImpl implements VoteService {
+
+    private final LocalTime VOTING_AVAILABLE_UNTIL = LocalTime.of(11, 0);
+    private final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
     private final VoteRepository repository;
 
@@ -19,7 +24,14 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote create(Vote vote) {
-        return repository.save(vote);
+        var now = LocalTime.now();
+        if (now.isBefore(VOTING_AVAILABLE_UNTIL)) {
+            return repository.save(vote);
+        } else {
+            throw new IllegalArgumentException(
+                    String.format("Too late to vote. Voting available until %s.", now.format(TIME_FORMAT))
+            );
+        }
     }
 
     @Override

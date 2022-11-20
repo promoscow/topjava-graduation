@@ -2,10 +2,11 @@ package ru.xpendence.topjavagraduation.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurants")
@@ -21,7 +22,11 @@ public class Restaurant {
     private String name;
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
-    private List<Dish> dishes = new ArrayList<>();
+    private Set<Dish> dishes = new HashSet<>();
+
+    @Where(clause = "date = current_date()")
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
+    private Set<Vote> votes = new HashSet<>();
 
     public static void enrichForUpdate(Restaurant forUpdate, Restaurant stored) {
         stored.name = forUpdate.name;

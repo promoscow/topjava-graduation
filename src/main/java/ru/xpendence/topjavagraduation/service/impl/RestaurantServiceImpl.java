@@ -57,6 +57,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Restaurant getChosen() {
+        return repository.getIdsWithVotesCount(Pageable.ofSize(1)).getContent().get(0);
+    }
+
+    @Override
     public void delete(Long id) {
         repository.deleteById(id);
     }

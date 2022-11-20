@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 public class RestaurantModelMapper {
 
     private final DishModelMapper dishModelMapper;
+    private final VoteMapper voteMapper;
 
-    public RestaurantModelMapper(DishModelMapper dishModelMapper) {
+    public RestaurantModelMapper(DishModelMapper dishModelMapper, VoteMapper voteMapper) {
         this.dishModelMapper = dishModelMapper;
+        this.voteMapper = voteMapper;
     }
 
     public Restaurant toRestaurant(RestaurantRequest request) {
@@ -26,7 +28,8 @@ public class RestaurantModelMapper {
         return new RestaurantResponse(
                 restaurant.getId(),
                 restaurant.getName(),
-                restaurant.getDishes().stream().map(dishModelMapper::toResponse).collect(Collectors.toList())
+                restaurant.getDishes().stream().map(dishModelMapper::toResponse).collect(Collectors.toList()),
+                restaurant.getVotes().stream().map(voteMapper::toResponse).collect(Collectors.toList())
         );
     }
 }

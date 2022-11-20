@@ -5,6 +5,7 @@ import java.util.List;
 public record RestaurantResponse(
         Long id,
         String name,
-        List<DishResponse> dishes
+        List<DishResponse> dishes,
+        List<VoteSimpleResponse> votes
 ) {
 }

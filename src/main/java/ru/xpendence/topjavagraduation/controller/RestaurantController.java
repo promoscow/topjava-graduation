@@ -10,5 +10,7 @@ public interface RestaurantController {
 
     RestaurantResponse get(Long id);
 
+    RestaurantResponse getChosen();
+
     Page<RestaurantResponse> getAll(Integer page, Integer size);
 }

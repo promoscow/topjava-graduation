@@ -16,7 +16,7 @@ public interface RestaurantService {
 
     Page<Restaurant> getAll(Pageable pageable);
 
-    // TODO: 12.11.2022 получить выбранный
+    Restaurant getChosen();
 
     void delete(Long id);
 }
