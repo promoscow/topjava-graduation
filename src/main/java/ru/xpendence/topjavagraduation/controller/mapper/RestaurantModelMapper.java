@@ -18,8 +18,15 @@ public class RestaurantModelMapper {
         this.voteMapper = voteMapper;
     }
 
-    public Restaurant toRestaurant(RestaurantRequest request) {
+    public Restaurant toRestaurantForCreate(RestaurantRequest request) {
         var restaurant = new Restaurant();
+        restaurant.setName(request.name());
+        return restaurant;
+    }
+
+    public Restaurant toRestaurantForUpdate(RestaurantRequest request) {
+        var restaurant = new Restaurant();
+        restaurant.setId(request.id());
         restaurant.setName(request.name());
         return restaurant;
     }

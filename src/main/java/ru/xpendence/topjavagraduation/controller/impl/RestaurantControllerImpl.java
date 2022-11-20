@@ -3,6 +3,7 @@ package ru.xpendence.topjavagraduation.controller.impl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.xpendence.topjavagraduation.controller.RestaurantController;
 import ru.xpendence.topjavagraduation.controller.mapper.PageableMapper;
@@ -33,7 +34,15 @@ public class RestaurantControllerImpl implements RestaurantController {
     @Operation(summary = "Создание нового ресторана")
     @PostMapping
     public RestaurantResponse create(@RequestBody RestaurantRequest request) {
-        return mapper.toResponse(service.create(mapper.toRestaurant(request)));
+        return mapper.toResponse(service.create(mapper.toRestaurantForCreate(request)));
+    }
+
+    @Override
+    @Operation(summary = "Обновление ресторана")
+    @PutMapping
+    public HttpStatus update(RestaurantRequest request) {
+        service.update(mapper.toRestaurantForUpdate(request));
+        return HttpStatus.OK;
     }
 
     @Override
