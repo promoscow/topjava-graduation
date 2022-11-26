@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.xpendence.topjavagraduation.AbstractTest;
@@ -12,6 +13,7 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class UserServiceTest extends AbstractTest {
 
     @Autowired

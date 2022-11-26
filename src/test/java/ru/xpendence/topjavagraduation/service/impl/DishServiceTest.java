@@ -2,6 +2,7 @@ package ru.xpendence.topjavagraduation.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class DishServiceTest extends AbstractTest {
 
     @Autowired
