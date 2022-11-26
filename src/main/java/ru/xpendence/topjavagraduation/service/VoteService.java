@@ -9,4 +9,6 @@ public interface VoteService {
     void update(Vote vote);
 
     Vote getById(Long id);
+
+    Vote getByUserId(Long userId);
 }

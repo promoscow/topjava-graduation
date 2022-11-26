@@ -50,4 +50,10 @@ public class VoteServiceImpl implements VoteService {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Vote not found by id: %d", id)));
     }
+
+    @Override
+    public Vote getByUserId(Long userId) {
+        return repository.findByUserId(userId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Vote not found by user id: %d", userId)));
+    }
 }
