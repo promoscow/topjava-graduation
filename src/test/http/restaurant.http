@@ -12,6 +12,6 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/user/restaurants/1
+GET http://localhost:8080/admin/restaurants/1
 Authorization: Bearer {{token}}
 Accept: application/json

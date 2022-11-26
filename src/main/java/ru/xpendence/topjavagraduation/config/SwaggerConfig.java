@@ -5,10 +5,11 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
@@ -26,7 +27,25 @@ public class SwaggerConfig {
                                                 .scheme("bearer")
                                 )
                 )
-                .security(Arrays.asList(new SecurityRequirement().addList("bearerAuth")))
+                .security(List.of(new SecurityRequirement().addList("bearerAuth")))
                 .info(new Info().title("Система голосования за ресторан"));
+    }
+
+    @Bean
+    GroupedOpenApi adminApi() {
+        return GroupedOpenApi
+                .builder()
+                .group("Админ")
+                .pathsToMatch("/admin/**")
+                .build();
+    }
+
+    @Bean
+    GroupedOpenApi userApi() {
+        return GroupedOpenApi
+                .builder()
+                .group("Пользователь")
+                .pathsToMatch("/user/**")
+                .build();
     }
 }
