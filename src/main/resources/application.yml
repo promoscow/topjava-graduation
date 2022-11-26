@@ -15,4 +15,4 @@ spring:
 jwt:
   token:
     secret: lei4cy5w4ilxytw
-    expires: 3600000
+    expires: 8640000000

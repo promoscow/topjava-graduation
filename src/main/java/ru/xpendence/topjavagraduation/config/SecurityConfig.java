@@ -55,8 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers(SWAGGER_ENDPOINTS).permitAll()
-                .antMatchers("/admin/**").hasRole(RoleType.ADMIN.name()) // TODO: 26.11.2022 меняю на слэши - не пускает никого
-                .antMatchers("/user/**").hasRole(RoleType.USER.name()) // TODO: 26.11.2022 убираю слэши - пускает всех авторизованных
+                .antMatchers("/admin/**").hasAuthority(RoleType.ADMIN.name())
+                .antMatchers("/user/**").hasAuthority(RoleType.USER.name())
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenService));
