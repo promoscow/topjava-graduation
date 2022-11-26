@@ -12,8 +12,6 @@ import ru.xpendence.topjavagraduation.service.DishService;
 
 @RestController
 @RequestMapping("/user/dishes")
-// TODO: 13.11.2022 валидация!!!
-// TODO: 13.11.2022 ExceptionHandler!!!
 @Tag(name = "Блюда")
 public class DishControllerUser {
 

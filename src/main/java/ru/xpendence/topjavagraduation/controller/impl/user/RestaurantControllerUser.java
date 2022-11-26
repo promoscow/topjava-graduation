@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,10 @@ public class RestaurantControllerUser {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение ресторана")
-    public RestaurantResponse get(@PathVariable Long id) {
+    public RestaurantResponse get(
+            @Parameter(description = "Идентификатор ресторана")
+            @PathVariable Long id
+    ) {
         return mapper.toResponse(service.getById(id));
     }
 
@@ -42,9 +46,11 @@ public class RestaurantControllerUser {
     @Operation(summary = "Получение всех ресторанов")
     @GetMapping("/all")
     public Page<RestaurantResponse> getAll(
+            @Parameter(description = "Номер страницы")
             @RequestParam(required = false)
             Integer page,
 
+            @Parameter(description = "Размер страницы")
             @RequestParam(required = false)
             Integer size) {
         return service.getAll(pageableMapper.toPageable(page, size)).map(mapper::toResponse);

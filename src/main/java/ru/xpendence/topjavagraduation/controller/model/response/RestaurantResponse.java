@@ -6,6 +6,6 @@ public record RestaurantResponse(
         Long id,
         String name,
         List<DishResponse> dishes,
-        List<VoteSimpleResponse> votes
+        List<VoteResponse> votes
 ) {
 }

@@ -1,10 +1,13 @@
 package ru.xpendence.topjavagraduation.controller.impl.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.xpendence.topjavagraduation.controller.Validation;
 import ru.xpendence.topjavagraduation.controller.mapper.PageableMapper;
 import ru.xpendence.topjavagraduation.controller.mapper.RestaurantModelMapper;
 import ru.xpendence.topjavagraduation.controller.model.request.RestaurantRequest;
@@ -31,35 +34,43 @@ public class RestaurantControllerAdmin {
 
     @Operation(summary = "Создание нового ресторана")
     @PostMapping
-    public RestaurantResponse create(@RequestBody RestaurantRequest request) {
+    public RestaurantResponse create(
+            @Parameter(description = "Запрос на создание нового ресторана")
+            @RequestBody
+            @Validated(Validation.Create.class)
+            RestaurantRequest request
+    ) {
         return mapper.toResponse(service.create(mapper.toRestaurantForCreate(request)));
     }
 
     @Operation(summary = "Обновление ресторана")
     @PutMapping
-    public HttpStatus update(RestaurantRequest request) {
+    public HttpStatus update(
+            @Parameter(description = "Запрос на обновление ресторана")
+            @RequestBody
+            @Validated(Validation.Update.class) RestaurantRequest request
+    ) {
         service.update(mapper.toRestaurantForUpdate(request));
         return HttpStatus.OK;
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение ресторана")
-    public RestaurantResponse get(@PathVariable Long id) {
+    public RestaurantResponse get(
+            @Parameter(description = "Идентификатор ресторана")
+            @PathVariable Long id
+    ) {
         return mapper.toResponse(service.getById(id));
-    }
-
-    @GetMapping("/chosen")
-    @Operation(summary = "Получение выбранного ресторана")
-    public RestaurantResponse getChosen() {
-        return mapper.toResponse(service.getChosen());
     }
 
     @Operation(summary = "Получение всех ресторанов")
     @GetMapping("/all")
     public Page<RestaurantResponse> getAll(
+            @Parameter(description = "Номер страницы")
             @RequestParam(required = false)
             Integer page,
 
+            @Parameter(description = "Размер страницы")
             @RequestParam(required = false)
             Integer size) {
         return service.getAll(pageableMapper.toPageable(page, size)).map(mapper::toResponse);

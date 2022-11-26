@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.xpendence.topjavagraduation.controller.mapper.DishModelMapper;
 import ru.xpendence.topjavagraduation.controller.mapper.PageableMapper;
@@ -15,8 +16,6 @@ import ru.xpendence.topjavagraduation.service.DishService;
 
 @RestController
 @RequestMapping("/admin/dishes")
-// TODO: 13.11.2022 валидация!!!
-// TODO: 13.11.2022 ExceptionHandler!!!
 @Tag(name = "Блюда")
 public class DishControllerAdmin {
 
@@ -35,6 +34,7 @@ public class DishControllerAdmin {
     public DishResponse create(
             @Parameter(description = "Запрос на добавление блюда")
             @RequestBody
+            @Validated
             DishCreateRequest request
     ) {
         return mapper.toResponse(service.create(mapper.toDish(request)));
@@ -45,6 +45,7 @@ public class DishControllerAdmin {
     public HttpStatus update(
             @Parameter(description = "Запрос на обновление блюда")
             @RequestBody
+            @Validated
             DishUpdateRequest request
     ) {
         service.update(mapper.toDish(request));

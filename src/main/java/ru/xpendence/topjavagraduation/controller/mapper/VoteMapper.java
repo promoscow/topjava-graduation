@@ -2,7 +2,7 @@ package ru.xpendence.topjavagraduation.controller.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.xpendence.topjavagraduation.controller.model.request.VoteRequest;
-import ru.xpendence.topjavagraduation.controller.model.response.VoteSimpleResponse;
+import ru.xpendence.topjavagraduation.controller.model.response.VoteResponse;
 import ru.xpendence.topjavagraduation.entity.Vote;
 import ru.xpendence.topjavagraduation.service.RestaurantService;
 import ru.xpendence.topjavagraduation.service.UserService;
@@ -28,8 +28,8 @@ public class VoteMapper {
         return vote;
     }
 
-    public VoteSimpleResponse toResponse(Vote vote) {
-        return new VoteSimpleResponse(
+    public VoteResponse toResponse(Vote vote) {
+        return new VoteResponse(
                 vote.getId(),
                 vote.getDate(),
                 vote.getUser().getId(),
