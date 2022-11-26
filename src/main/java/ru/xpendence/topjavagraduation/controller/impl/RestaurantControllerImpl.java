@@ -13,7 +13,7 @@ import ru.xpendence.topjavagraduation.controller.model.response.RestaurantRespon
 import ru.xpendence.topjavagraduation.service.RestaurantService;
 
 @RestController
-@RequestMapping("/restaurants")
+@RequestMapping("/user/restaurants")
 @Tag(name = "Рестораны")
 public class RestaurantControllerImpl implements RestaurantController {
 

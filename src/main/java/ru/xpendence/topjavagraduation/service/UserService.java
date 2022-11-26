@@ -10,6 +10,8 @@ public interface UserService {
 
     User getById(Long id);
 
+    User getByUsername(String username);
+
     void addRole(Long id, Long roleId);
 
     void removeRole(Long id, Long roleId);

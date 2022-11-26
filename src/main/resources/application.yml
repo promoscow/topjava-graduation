@@ -11,3 +11,8 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
+
+jwt:
+  token:
+    secret: lei4cy5w4ilxytw
+    expires: 3600000

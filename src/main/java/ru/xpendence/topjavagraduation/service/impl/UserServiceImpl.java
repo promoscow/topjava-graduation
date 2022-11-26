@@ -44,6 +44,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException(String.format("User not found by username: %s", username)));
+    }
+
+    @Override
     @Transactional
     public void addRole(Long id, Long roleId) {
         var role = roleService.getById(roleId);

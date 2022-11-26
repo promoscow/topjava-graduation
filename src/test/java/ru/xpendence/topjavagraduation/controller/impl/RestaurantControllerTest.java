@@ -42,6 +42,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     private RestaurantRequest toRequest(Restaurant restaurant) {
         return new RestaurantRequest(
+                null,
                 restaurant.getName()
         );
     }
