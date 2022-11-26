@@ -23,6 +23,11 @@ As a result, provide a link to github repository. It should contain the code, RE
 
 -----------------------------
 
+## Размещение приложения
+
+Демо приложения (последняя актуальная сборка, ссылка на Сваггер) размещено по адресу:
+[http://ovz1.slava-rossii.wmekm.vps.myjino.ru:49218/swagger-ui/index.html](http://ovz1.slava-rossii.wmekm.vps.myjino.ru:49218/swagger-ui/index.html)
+
 ## Swagger
 
 Ссылка на сваггер:
