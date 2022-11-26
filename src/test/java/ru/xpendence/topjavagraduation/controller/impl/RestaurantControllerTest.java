@@ -1,5 +1,6 @@
 package ru.xpendence.topjavagraduation.controller.impl;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled
 class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
