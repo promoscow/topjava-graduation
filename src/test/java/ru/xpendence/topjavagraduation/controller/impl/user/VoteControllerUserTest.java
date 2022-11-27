@@ -67,7 +67,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
-    void vote_throwsMethodArgumentNotValidException() throws Exception {
+    void voteThrowsMethodArgumentNotValidException() throws Exception {
         mockMvc.perform(
                         post("/user/votes")
                                 .contentType(MediaType.APPLICATION_JSON)
