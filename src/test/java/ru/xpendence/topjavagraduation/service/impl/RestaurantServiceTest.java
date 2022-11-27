@@ -1,7 +1,6 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +12,6 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
 class RestaurantServiceTest extends AbstractTest {
 
     @Autowired
@@ -38,6 +36,21 @@ class RestaurantServiceTest extends AbstractTest {
     void get() {
         var restaurant = dataBuilder.saveRestaurant();
         assertDoesNotThrow(() -> service.getById(restaurant.getId()));
+    }
+
+    @Test
+    void getByDishId() {
+        var restaurant = dataBuilder.saveRestaurant();
+        var dish = dataBuilder.saveDish(restaurant);
+        assertDoesNotThrow(() -> service.getByDishId(dish.getId()));
+    }
+
+    @Test
+    void getChosen() {
+        var restaurant = dataBuilder.saveRestaurant();
+        var user = dataBuilder.saveUser();
+        dataBuilder.saveVote(user, restaurant);
+        assertDoesNotThrow(() -> service.getChosen());
     }
 
     @Test

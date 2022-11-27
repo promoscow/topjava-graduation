@@ -24,7 +24,7 @@ public class VoteMapper {
         var vote = new Vote();
         vote.setDate(LocalDate.now());
         vote.setUser(userService.getById(request.userId()));
-        vote.setRestaurant(restaurantService.getById(request.userId()));
+        vote.setRestaurant(restaurantService.getById(request.restaurantId()));
         return vote;
     }
 

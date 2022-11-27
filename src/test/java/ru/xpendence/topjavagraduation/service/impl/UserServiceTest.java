@@ -1,7 +1,6 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.xpendence.topjavagraduation.AbstractTest;
@@ -13,7 +12,6 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
 class UserServiceTest extends AbstractTest {
 
     @Autowired
@@ -38,6 +36,12 @@ class UserServiceTest extends AbstractTest {
     void get() {
         var user = dataBuilder.saveUser();
         assertDoesNotThrow(() -> service.getById(user.getId()));
+    }
+
+    @Test
+    void getByUsername() {
+        var user = dataBuilder.saveUser();
+        assertDoesNotThrow(() -> service.getByUsername(user.getUsername()));
     }
 
     @Test

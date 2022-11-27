@@ -1,7 +1,6 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.xpendence.topjavagraduation.AbstractTest;
@@ -9,13 +8,16 @@ import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.entity.User;
 import ru.xpendence.topjavagraduation.service.VoteService;
 
+import java.time.LocalTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
 class VoteServiceTest extends AbstractTest {
 
     @Autowired
     private VoteService service;
+
+    private final LocalTime VOTING_AVAILABLE_UNTIL = LocalTime.of(11, 0);
 
     private User user;
     private Restaurant restaurant;
@@ -29,7 +31,12 @@ class VoteServiceTest extends AbstractTest {
     @Test
     void create() {
         var vote = dataBuilder.buildVote(user, restaurant);
-        assertNotNull(service.create(vote).getId());
+        var now = LocalTime.now();
+        if (now.isBefore(VOTING_AVAILABLE_UNTIL)) {
+            assertNotNull(service.create(vote).getId());
+        } else {
+            assertThrows(IllegalArgumentException.class, () -> service.create(vote));
+        }
     }
 
     @Test
@@ -45,5 +52,11 @@ class VoteServiceTest extends AbstractTest {
     void getById() {
         var vote = dataBuilder.saveVote(user, restaurant);
         assertDoesNotThrow(() -> service.getById(vote.getId()));
+    }
+
+    @Test
+    void getByUserId() {
+        var vote = dataBuilder.saveVote(user, restaurant);
+        assertDoesNotThrow(() -> service.getByUserId(vote.getUser().getId()));
     }
 }

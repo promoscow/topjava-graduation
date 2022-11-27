@@ -29,7 +29,10 @@ public class VoteServiceImpl implements VoteService {
             return repository.save(vote);
         } else {
             throw new IllegalArgumentException(
-                    String.format("Too late to vote. Voting available until %s.", now.format(TIME_FORMAT))
+                    String.format(
+                            "Too late to vote. Voting available until %s.",
+                            VOTING_AVAILABLE_UNTIL.format(TIME_FORMAT)
+                    )
             );
         }
     }
