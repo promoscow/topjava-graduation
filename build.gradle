@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'ru.xpendence'
@@ -28,6 +29,18 @@ dependencies {
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.8"
 }

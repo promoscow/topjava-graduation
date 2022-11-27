@@ -1,4 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8cc2760cc337427c888f102ab7e4096d)](https://www.codacy.com/gh/promoscow/topjava-graduation/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=promoscow/topjava-graduation&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/8cc2760cc337427c888f102ab7e4096d)](https://www.codacy.com/gh/promoscow/topjava-graduation/dashboard?utm_source=github.com&utm_medium=referral&utm_content=promoscow/topjava-graduation&utm_campaign=Badge_Coverage)
 
 ## Выпускной проект TopJava
 
