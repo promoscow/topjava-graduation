@@ -12,12 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Objects;
 
-/**
- * Author: Vyacheslav Chernyshov
- * Date: 17.08.19
- * Time: 12:22
- * e-mail: v.chernyshov@pflb.ru
- */
 public class JwtTokenFilter extends GenericFilterBean {
 
     private final JwtTokenService jwtTokenService;
