@@ -12,3 +12,12 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+### Eclipse / VS Code Java (JDT) ###
+bin/
+.classpath
+.project
+.settings/
+
+# Contains a machine-specific JDK path
+gradle.properties

@@ -1,0 +1,10 @@
+# сборка и артефакты
+build/
+target/
+out/
+.gradle/
+
+# секреты и локальные конфиги
+.env
+*.pem
+src/main/resources/application-local.yml
