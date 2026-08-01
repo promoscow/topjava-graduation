@@ -8,6 +8,7 @@ import ru.xpendence.topjavagraduation.controller.model.request.VoteRequest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.entity.User;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,6 +64,39 @@ class VoteControllerUserTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(vote.getId()))
+                .andReturn();
+    }
+
+    @Test
+    void getByUserIdUsesTodayWhenDateNotProvided() throws Exception {
+        var yesterday = LocalDate.now().minusDays(1);
+        dataBuilder.saveVote(user, restaurant, yesterday);
+        var todayVote = dataBuilder.saveVote(user, restaurant, LocalDate.now());
+
+        mockMvc.perform(
+                        get("/user/votes/user/{userId}", user.getId())
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(todayVote.getId()))
+                .andExpect(jsonPath("$.date").value(LocalDate.now().toString()))
+                .andReturn();
+    }
+
+    @Test
+    void getByUserIdReturnsVoteForSpecifiedDate() throws Exception {
+        var yesterday = LocalDate.now().minusDays(1);
+        var yesterdayVote = dataBuilder.saveVote(user, restaurant, yesterday);
+        dataBuilder.saveVote(user, restaurant, LocalDate.now());
+
+        mockMvc.perform(
+                        get("/user/votes/user/{userId}", user.getId())
+                                .param("date", yesterday.toString())
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(yesterdayVote.getId()))
+                .andExpect(jsonPath("$.date").value(yesterday.toString()))
                 .andReturn();
     }
 

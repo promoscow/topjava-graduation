@@ -21,3 +21,4 @@ bin/
 
 # Contains a machine-specific JDK path
 gradle.properties
+local/

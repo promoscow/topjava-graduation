@@ -8,3 +8,4 @@ out/
 .env
 *.pem
 src/main/resources/application-local.yml
+local/

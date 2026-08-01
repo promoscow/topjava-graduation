@@ -15,7 +15,9 @@ import ru.xpendence.topjavagraduation.service.DishService;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,6 +73,16 @@ class DishControllerAdminTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         assertFalse(service.getById(dish.getId()).getActive());
+    }
+
+    @Test
+    void resetMenuReturnsNotFoundWhenRestaurantHasNoDishes() throws Exception {
+        mockMvc.perform(
+                put("/admin/dishes/reset/restaurant/{restaurantId}", restaurant.getId())
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 
     @Test

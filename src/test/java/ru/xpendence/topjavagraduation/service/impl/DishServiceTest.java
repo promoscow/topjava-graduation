@@ -11,7 +11,11 @@ import ru.xpendence.topjavagraduation.service.DishService;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DishServiceTest extends AbstractTest {
 
@@ -47,6 +51,11 @@ class DishServiceTest extends AbstractTest {
         service.update(dish);
         service.resetMenu(restaurant.getId());
         assertFalse(service.getById(dish.getId()).getActive());
+    }
+
+    @Test
+    void resetMenuThrowsWhenRestaurantHasNoDishes() {
+        assertThrows(NoSuchElementException.class, () -> service.resetMenu(restaurant.getId()));
     }
 
     @Test

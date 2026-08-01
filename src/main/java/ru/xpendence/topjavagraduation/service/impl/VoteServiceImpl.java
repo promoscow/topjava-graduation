@@ -5,6 +5,7 @@ import ru.xpendence.topjavagraduation.entity.Vote;
 import ru.xpendence.topjavagraduation.repository.VoteRepository;
 import ru.xpendence.topjavagraduation.service.VoteService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
@@ -55,8 +56,10 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Vote getByUserId(Long userId) {
-        return repository.findByUserId(userId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("Vote not found by user id: %d", userId)));
+    public Vote getByUserId(Long userId, LocalDate date) {
+        return repository.findByUserIdAndDate(userId, date)
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("Vote not found by user id: %d and date: %s", userId, date)
+                ));
     }
 }

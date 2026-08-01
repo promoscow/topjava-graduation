@@ -6,6 +6,7 @@ public record VoteRequest(
 
         @NotNull
         Long userId,
+   
 
         @NotNull
         Long restaurantId

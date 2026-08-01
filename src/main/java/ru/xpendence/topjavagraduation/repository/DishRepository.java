@@ -10,10 +10,16 @@ import ru.xpendence.topjavagraduation.entity.Dish;
 
 public interface DishRepository extends JpaRepository<Dish, Long> {
 
+    /**
+     * Снимает признак активности со всех блюд ресторана.
+     *
+     * @param restaurantId идентификатор ресторана
+     * @return количество затронутых блюд
+     */
     @Transactional
     @Modifying
-    @Query("update Dish d set d.active = false where d.restaurant.id = ?1")
-    void setActiveFalseForAllByRestaurantId(Long restaurantId);
+    @Query("UPDATE Dish d SET d.active = false WHERE d.restaurant.id = :restaurantId")
+    int setActiveFalseForAllByRestaurantId(@org.springframework.data.repository.query.Param("restaurantId") Long restaurantId);
 
     Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable);
 

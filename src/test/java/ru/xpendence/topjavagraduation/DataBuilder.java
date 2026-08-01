@@ -68,8 +68,12 @@ public class DataBuilder {
     }
 
     public Vote buildVote(User user, Restaurant restaurant) {
+        return buildVote(user, restaurant, LocalDate.now());
+    }
+
+    public Vote buildVote(User user, Restaurant restaurant, LocalDate date) {
         var vote = new Vote();
-        vote.setDate(LocalDate.now());
+        vote.setDate(date);
         vote.setUser(user);
         vote.setRestaurant(restaurant);
         return vote;
@@ -77,5 +81,9 @@ public class DataBuilder {
 
     public Vote saveVote(User user, Restaurant restaurant) {
         return voteRepository.save(buildVote(user, restaurant));
+    }
+
+    public Vote saveVote(User user, Restaurant restaurant, LocalDate date) {
+        return voteRepository.save(buildVote(user, restaurant, date));
     }
 }

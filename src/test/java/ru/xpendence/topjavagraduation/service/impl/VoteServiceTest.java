@@ -8,9 +8,14 @@ import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.entity.User;
 import ru.xpendence.topjavagraduation.service.VoteService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VoteServiceTest extends AbstractTest {
 
@@ -57,6 +62,25 @@ class VoteServiceTest extends AbstractTest {
     @Test
     void getByUserId() {
         var vote = dataBuilder.saveVote(user, restaurant);
-        assertDoesNotThrow(() -> service.getByUserId(vote.getUser().getId()));
+        assertEquals(vote.getId(), service.getByUserId(vote.getUser().getId(), LocalDate.now()).getId());
+    }
+
+    @Test
+    void getByUserIdReturnsVoteForSpecifiedDateWhenUserHasMultipleVotes() {
+        var yesterday = LocalDate.now().minusDays(1);
+        var todayVote = dataBuilder.saveVote(user, restaurant, LocalDate.now());
+        var yesterdayVote = dataBuilder.saveVote(user, restaurant, yesterday);
+
+        assertEquals(todayVote.getId(), service.getByUserId(user.getId(), LocalDate.now()).getId());
+        assertEquals(yesterdayVote.getId(), service.getByUserId(user.getId(), yesterday).getId());
+    }
+
+    @Test
+    void getByUserIdThrowsWhenVoteForDateNotFound() {
+        dataBuilder.saveVote(user, restaurant, LocalDate.now());
+        assertThrows(
+                NoSuchElementException.class,
+                () -> service.getByUserId(user.getId(), LocalDate.now().minusDays(1))
+        );
     }
 }
