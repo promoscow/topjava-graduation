@@ -32,6 +32,15 @@ public class SwaggerConfig {
     }
 
     @Bean
+    GroupedOpenApi authApi() {
+        return GroupedOpenApi
+                .builder()
+                .group("Авторизация")
+                .pathsToMatch("/login", "/users")
+                .build();
+    }
+
+    @Bean
     GroupedOpenApi adminApi() {
         return GroupedOpenApi
                 .builder()
@@ -45,7 +54,7 @@ public class SwaggerConfig {
         return GroupedOpenApi
                 .builder()
                 .group("Пользователь")
-                .pathsToMatch("/user/**")
+                .pathsToMatch("/user/**", "/users/**")
                 .build();
     }
 }

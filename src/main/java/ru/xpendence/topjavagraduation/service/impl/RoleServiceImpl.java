@@ -2,6 +2,7 @@ package ru.xpendence.topjavagraduation.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.xpendence.topjavagraduation.entity.Role;
+import ru.xpendence.topjavagraduation.entity.type.RoleType;
 import ru.xpendence.topjavagraduation.repository.RoleRepository;
 import ru.xpendence.topjavagraduation.service.RoleService;
 
@@ -21,6 +22,12 @@ public class RoleServiceImpl implements RoleService {
     public Role getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Role not found by id: %d", id)));
+    }
+
+    @Override
+    public Role getByName(RoleType name) {
+        return repository.findByName(name)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Role not found by name: %s", name)));
     }
 
     @Override

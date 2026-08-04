@@ -49,7 +49,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
                                     .content(objectMapper.writeValueAsString(toRequest(user, restaurant)))
                     )
                     .andDo(print())
-                    .andExpect(status().isInternalServerError())
+                    .andExpect(status().isBadRequest())
                     .andReturn();
         }
 

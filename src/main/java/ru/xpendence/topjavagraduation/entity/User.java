@@ -42,6 +42,7 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     public static void enrichForUpdate(User forUpdate, User stored) {
+        stored.username = forUpdate.username;
         stored.password = forUpdate.password;
     }
 }
