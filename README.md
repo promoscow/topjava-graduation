@@ -42,17 +42,9 @@ API разделено на 2 части - админскую и пользов�
 
 Поскольку в проекте реализована авторизация, для осуществления запросов необходимо использовать токен.
 
-Получить токен можно двумя способами:
- 1. Воспользоваться запросами авторизации по адресу: `test/http/login.http`
- 2. Воспользоваться готовыми токенами, представленными ниже.
+Получить токен можно запросом авторизации (`POST /login`) или через `test/http/login.http`.
 
-Админский токен до 6 марта:
-
-`eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlVTRVIiLCJBRE1JTiJdLCJpYXQiOjE2Njk0Njk0MzEsImV4cCI6MTY3ODEwOTQzMX0.P92PWExTw9o7mVfBXaGnqApT6TL8SFa_pawWs34lJKc`
-
-Пользовательский токен до 6 марта:
-
-`eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjaGlsbGVyMiIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNjY5NDY5NTA1LCJleHAiOjE2NzgxMDk1MDV9.xySCafYAPKHWm6y-nfkMxWlUlxcbgZ27pAZJrIt3sBM`
+Примеры пользователей из миграций: `admin` / `admin`, `chiller2` / `123`.
 
 Токен можно вставить для всех запросов сразу и для каждого запроса в отдельности:
 
@@ -62,10 +54,11 @@ API разделено на 2 части - админскую и пользов�
 
 ## Технологический стек
 
-* Spring Boot 2.7.5
+* Java 25
+* Spring Boot 3.5.12
 * Spring Security
 * Hibernate
 * Flyway
-* Swagger
+* springdoc-openapi (Swagger UI)
 * H2
-* Gradle
+* Gradle 9.6.1

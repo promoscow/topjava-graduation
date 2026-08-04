@@ -1,11 +1,10 @@
 package ru.xpendence.topjavagraduation.controller.model.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 import ru.xpendence.topjavagraduation.controller.Validation;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
 
 public record RestaurantRequest(
 

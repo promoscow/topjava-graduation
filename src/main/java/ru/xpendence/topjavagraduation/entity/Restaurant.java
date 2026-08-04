@@ -1,10 +1,17 @@
 package ru.xpendence.topjavagraduation.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +31,7 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     private Set<Dish> dishes = new HashSet<>();
 
-    @Where(clause = "date = current_date()")
+    @SQLRestriction("date = current_date()")
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     private Set<Vote> votes = new HashSet<>();
 

@@ -3,6 +3,7 @@ package ru.xpendence.topjavagraduation.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.repository.RestaurantRepository;
 import ru.xpendence.topjavagraduation.service.RestaurantService;
@@ -38,12 +39,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Restaurant getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Restaurant not found by id: %d", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Restaurant getByDishId(Long dishId) {
         return repository.getByDishId(dishId)
                 .orElseThrow(
@@ -52,11 +55,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Restaurant> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Restaurant getChosen() {
         return repository.getIdsWithVotesCount(Pageable.ofSize(1)).getContent().get(0);
     }

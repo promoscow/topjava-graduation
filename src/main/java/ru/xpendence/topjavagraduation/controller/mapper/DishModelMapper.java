@@ -5,16 +5,10 @@ import ru.xpendence.topjavagraduation.controller.model.request.DishCreateRequest
 import ru.xpendence.topjavagraduation.controller.model.request.DishUpdateRequest;
 import ru.xpendence.topjavagraduation.controller.model.response.DishResponse;
 import ru.xpendence.topjavagraduation.entity.Dish;
-import ru.xpendence.topjavagraduation.service.RestaurantService;
+import ru.xpendence.topjavagraduation.entity.Restaurant;
 
 @Component
 public class DishModelMapper {
-
-    private final RestaurantService restaurantService;
-
-    public DishModelMapper(RestaurantService restaurantService) {
-        this.restaurantService = restaurantService;
-    }
 
     public DishResponse toResponse(Dish dish) {
         return new DishResponse(
@@ -27,7 +21,9 @@ public class DishModelMapper {
         dish.setPrice(request.price());
         dish.setName(request.name());
         dish.setActive(request.active());
-        dish.setRestaurant(restaurantService.getById(request.restaurantId()));
+        var restaurant = new Restaurant();
+        restaurant.setId(request.restaurantId());
+        dish.setRestaurant(restaurant);
         return dish;
     }
 
@@ -37,7 +33,6 @@ public class DishModelMapper {
         dish.setPrice(request.price());
         dish.setName(request.name());
         dish.setActive(request.active());
-        dish.setRestaurant(restaurantService.getByDishId(request.id()));
         return dish;
     }
 }

@@ -3,9 +3,11 @@ package ru.xpendence.topjavagraduation.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.topjavagraduation.entity.Dish;
 import ru.xpendence.topjavagraduation.repository.DishRepository;
 import ru.xpendence.topjavagraduation.service.DishService;
+import ru.xpendence.topjavagraduation.service.RestaurantService;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -14,17 +16,22 @@ import java.util.Objects;
 public class DishServiceImpl implements DishService {
 
     private final DishRepository repository;
+    private final RestaurantService restaurantService;
 
-    public DishServiceImpl(DishRepository repository) {
+    public DishServiceImpl(DishRepository repository, RestaurantService restaurantService) {
         this.repository = repository;
+        this.restaurantService = restaurantService;
     }
 
     @Override
+    @Transactional
     public Dish create(Dish dish) {
+        dish.setRestaurant(restaurantService.getById(dish.getRestaurant().getId()));
         return repository.save(dish);
     }
 
     @Override
+    @Transactional
     public void update(Dish dish) {
         if (Objects.isNull(dish.getId())) {
             throw new IllegalArgumentException("Dish id is null.");
@@ -46,12 +53,14 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Dish getById(Long id) {
-        return repository.findById(id)
+        return repository.findByIdWithRestaurant(id)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Dish not found by id: %d", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable) {
         return repository.getAllByRestaurantId(restaurantId, pageable);
     }

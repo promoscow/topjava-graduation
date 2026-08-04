@@ -8,11 +8,9 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
-    properties:
-      hibernate.dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
 
 jwt:
   token:
-    secret: lei4cy5w4ilxytw
+    secret: lei4cy5w4ilxytw-topjava-graduation-hs256
     expires: 8640000000

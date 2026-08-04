@@ -1,42 +1,41 @@
 package ru.xpendence.topjavagraduation.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.xpendence.topjavagraduation.config.security.JwtConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.xpendence.topjavagraduation.config.security.JwtTokenFilter;
 import ru.xpendence.topjavagraduation.config.security.JwtTokenService;
 import ru.xpendence.topjavagraduation.entity.type.RoleType;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity
+public class SecurityConfig {
 
     private static final String[] SWAGGER_ENDPOINTS = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/v2/api-docs/**",
-            "/swagger-resources/**"
+            "/swagger-ui.html"
     };
 
     private final JwtTokenService jwtTokenService;
 
-    @Autowired
     public SecurityConfig(JwtTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;
     }
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -44,21 +43,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
-                .csrf().disable()
-                .cors().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers(SWAGGER_ENDPOINTS).permitAll()
-                .antMatchers("/admin/**").hasAuthority(RoleType.ADMIN.name())
-                .antMatchers("/user/**").hasAuthority(RoleType.USER.name())
-                .anyRequest().authenticated()
-                .and()
-                .apply(new JwtConfigurer(jwtTokenService));
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
+                        .requestMatchers("/admin/**").hasAuthority(RoleType.ADMIN.name())
+                        .requestMatchers("/user/**").hasAuthority(RoleType.USER.name())
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(new JwtTokenFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }
