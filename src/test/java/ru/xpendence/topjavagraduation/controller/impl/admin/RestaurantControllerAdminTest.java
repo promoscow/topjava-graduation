@@ -7,7 +7,9 @@ import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
 import ru.xpendence.topjavagraduation.controller.model.request.RestaurantRequest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +33,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
-        var name = RandomStringUtils.randomAlphabetic(16);
+        var name = RandomStringUtils.secure().nextAlphanumeric(16);
         restaurant.setName(name);
         mockMvc.perform(
                 put("/admin/restaurants")

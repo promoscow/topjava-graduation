@@ -35,7 +35,7 @@ public class DataBuilder {
 
     public Restaurant buildRestaurant() {
         var restaurant = new Restaurant();
-        restaurant.setName(RandomStringUtils.randomAlphabetic(16));
+        restaurant.setName(RandomStringUtils.secure().nextAlphanumeric(16));
         return restaurant;
     }
 
@@ -45,7 +45,7 @@ public class DataBuilder {
 
     public Dish buildDish(Restaurant restaurant) {
         var dish = new Dish();
-        dish.setName(RandomStringUtils.randomAlphabetic(16));
+        dish.setName(RandomStringUtils.secure().nextAlphanumeric(16));
         dish.setPrice(BigDecimal.valueOf(RANDOM.nextDouble()));
         dish.setActive(RANDOM.nextBoolean());
         dish.setRestaurant(restaurant);
@@ -58,8 +58,8 @@ public class DataBuilder {
 
     public User buildUser() {
         var user = new User();
-        user.setUsername(RandomStringUtils.randomAlphabetic(16));
-        user.setPassword(RandomStringUtils.randomAlphabetic(16));
+        user.setUsername(RandomStringUtils.secure().nextAlphanumeric(16));
+        user.setPassword(RandomStringUtils.secure().nextAlphanumeric(16));
         return user;
     }
 

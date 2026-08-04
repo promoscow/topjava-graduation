@@ -112,7 +112,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
 
     private DishCreateRequest toCreateRequest(Dish dish) {
         return new DishCreateRequest(
-                RandomStringUtils.randomAlphabetic(16),
+                RandomStringUtils.secure().nextAlphanumeric(16),
                 BigDecimal.TEN,
                 true,
                 dish.getRestaurant().getId()
@@ -122,7 +122,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     private DishUpdateRequest toUpdateRequest(Dish dish) {
         return new DishUpdateRequest(
                 dish.getId(),
-                RandomStringUtils.randomAlphabetic(16),
+                RandomStringUtils.secure().nextAlphanumeric(16),
                 BigDecimal.TEN,
                 true
         );

@@ -10,7 +10,11 @@ import ru.xpendence.topjavagraduation.service.RestaurantService;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RestaurantServiceTest extends AbstractTest {
 
@@ -26,7 +30,7 @@ class RestaurantServiceTest extends AbstractTest {
     @Test
     void update() {
         var restaurant = dataBuilder.saveRestaurant();
-        var newName = RandomStringUtils.randomAlphabetic(16);
+        var newName = RandomStringUtils.secure().nextAlphanumeric(16);
         restaurant.setName(newName);
         service.update(restaurant);
         assertEquals(newName, service.getById(restaurant.getId()).getName());

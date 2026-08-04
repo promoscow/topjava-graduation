@@ -55,8 +55,8 @@ class UserServiceTest extends AbstractTest {
     @Test
     void update() {
         var user = service.create(dataBuilder.buildUser());
-        var username = RandomStringUtils.randomAlphabetic(16);
-        var password = RandomStringUtils.randomAlphabetic(16);
+        var username = RandomStringUtils.secure().nextAlphanumeric(16);
+        var password = RandomStringUtils.secure().nextAlphanumeric(16);
         user.setUsername(username);
         user.setPassword(password);
 

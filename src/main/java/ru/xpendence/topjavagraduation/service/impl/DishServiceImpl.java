@@ -67,6 +67,9 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new NoSuchElementException(String.format("Dish not found by id: %d", id));
+        }
         repository.deleteById(id);
     }
 }
