@@ -1,0 +1,1 @@
+Вот тест: @src/test/java/ru/xpendence/topjavagraduation/service/impl/DishServiceTest.java , в нём есть тест delete_absentThrowsException. Исправь метод, чтобы тест проходил. Тест не менять. Прогони тесты.
