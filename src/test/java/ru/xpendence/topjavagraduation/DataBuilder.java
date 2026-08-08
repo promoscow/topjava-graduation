@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.xpendence.topjavagraduation.entity.Dish;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
+import ru.xpendence.topjavagraduation.entity.Review;
 import ru.xpendence.topjavagraduation.entity.User;
 import ru.xpendence.topjavagraduation.entity.Vote;
 import ru.xpendence.topjavagraduation.repository.DishRepository;
 import ru.xpendence.topjavagraduation.repository.RestaurantRepository;
+import ru.xpendence.topjavagraduation.repository.ReviewRepository;
 import ru.xpendence.topjavagraduation.repository.UserRepository;
 import ru.xpendence.topjavagraduation.repository.VoteRepository;
 
@@ -30,6 +32,9 @@ public class DataBuilder {
 
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     private final Random RANDOM = new Random();
 
@@ -85,5 +90,27 @@ public class DataBuilder {
 
     public Vote saveVote(User user, Restaurant restaurant, LocalDate date) {
         return voteRepository.save(buildVote(user, restaurant, date));
+    }
+
+    public Review buildReview(User user, Restaurant restaurant) {
+        return buildReview(user, restaurant, 5, RandomStringUtils.secure().nextAlphanumeric(32));
+    }
+
+    public Review buildReview(User user, Restaurant restaurant, Integer rating, String text) {
+        var review = new Review();
+        review.setRating(rating);
+        review.setText(text);
+        review.setDate(LocalDate.now());
+        review.setUser(user);
+        review.setRestaurant(restaurant);
+        return review;
+    }
+
+    public Review saveReview(User user, Restaurant restaurant) {
+        return reviewRepository.save(buildReview(user, restaurant));
+    }
+
+    public Review saveReview(User user, Restaurant restaurant, Integer rating, String text) {
+        return reviewRepository.save(buildReview(user, restaurant, rating, text));
     }
 }
