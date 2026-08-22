@@ -6,11 +6,13 @@ import org.springframework.stereotype.Component;
 import ru.xpendence.topjavagraduation.entity.Dish;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.entity.Review;
+import ru.xpendence.topjavagraduation.entity.Tag;
 import ru.xpendence.topjavagraduation.entity.User;
 import ru.xpendence.topjavagraduation.entity.Vote;
 import ru.xpendence.topjavagraduation.repository.DishRepository;
 import ru.xpendence.topjavagraduation.repository.RestaurantRepository;
 import ru.xpendence.topjavagraduation.repository.ReviewRepository;
+import ru.xpendence.topjavagraduation.repository.TagRepository;
 import ru.xpendence.topjavagraduation.repository.UserRepository;
 import ru.xpendence.topjavagraduation.repository.VoteRepository;
 
@@ -35,6 +37,9 @@ public class DataBuilder {
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     private final Random RANDOM = new Random();
 
@@ -112,5 +117,15 @@ public class DataBuilder {
 
     public Review saveReview(User user, Restaurant restaurant, Integer rating, String text) {
         return reviewRepository.save(buildReview(user, restaurant, rating, text));
+    }
+
+    public Tag buildTag() {
+        var tag = new Tag();
+        tag.setName(RandomStringUtils.secure().nextAlphanumeric(16));
+        return tag;
+    }
+
+    public Tag saveTag() {
+        return tagRepository.save(buildTag());
     }
 }
