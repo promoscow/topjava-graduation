@@ -1,0 +1,28 @@
+---
+description: Spring Data-репозитории — только методы под сервис
+globs: **/repository/**/*.java
+alwaysApply: false
+---
+
+# Репозиторий
+
+Только интерфейс `JpaRepository<{Entity}, Long>`. Имя `{Entity}Repository`. Реализаций и `@Repository` на классе нет.
+
+- Методы — **ровно** под нужды своего сервиса, не «на будущее».
+- Derived: `findBy*`, `existsBy*`, `countBy*` → `Optional` / `boolean` / `long` / `Page`.
+- Кастомный JPQL — `@Query`. Для ответа с ассоциациями — `JOIN FETCH` (`findByIdWithDetails`, `findByIdWithRestaurant`). У `Page` с fetch — отдельный `countQuery`.
+- Массовый UPDATE/DELETE — `@Modifying` + `@Query`; `@Transactional` на таком методе, если его нет на сервисе.
+- Параметры именовать `@Param`, не полагаться на `?1` в новом коде.
+
+```java
+// GOOD
+public interface TagRepository extends JpaRepository<Tag, Long> {
+    boolean existsByName(String name);
+    Page<Tag> findByNameContainingIgnoreCase(String name, Pageable pageable);
+}
+
+@Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = :id")
+Optional<Dish> findByIdWithRestaurant(@Param("id") Long id);
+
+// BAD — класс-реализация, методы «на всякий случай», fetch без countQuery у Page
+```

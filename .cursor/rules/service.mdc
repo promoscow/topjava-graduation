@@ -1,0 +1,24 @@
+---
+description: Сервисный слой — entity, транзакции, чужие сущности
+globs: **/service/**/*.java
+alwaysApply: false
+---
+
+# Сервис
+
+Интерфейс `{Entity}Service` + `{Entity}ServiceImpl` в `service.impl`. `@Service`. Работает только с **entity**, не с DTO.
+
+- Свой репозиторий — поле `repository`. Чужие сущности — только через их `*Service`, не через чужой `*Repository`.
+- Конструкторная инъекция без `@Autowired` / Lombok: `private final` поля, зависимость от интерфейсов.
+- Методы: `create`, `update`, `getById`, `getBy{Field}`, `getAll`, `getAllBy{Field}`, `delete`. Не `find*` и не `Optional` наружу.
+- `@Transactional` на изменяющих методах; чтение — `@Transactional(readOnly = true)`. Не на контроллере.
+- Update: `id == null` → `IllegalArgumentException` → `findById` stored → `Entity.enrichForUpdate(incoming, stored)` → `save(stored)`.
+- Поиск: `orElseThrow` с `NoSuchElementException` и `String.format`, текст на английском: `"Tag not found by id: %d"`. Инварианты (занятое имя, бизнес-правило) — `IllegalArgumentException`.
+
+```java
+// GOOD
+return repository.findById(id)
+    .orElseThrow(() -> new NoSuchElementException(String.format("Tag not found by id: %d", id)));
+
+// BAD — чужой репозиторий, Optional из сервиса, DTO в сигнатуре
+```

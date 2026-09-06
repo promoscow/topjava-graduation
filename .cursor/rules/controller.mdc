@@ -1,0 +1,22 @@
+---
+description: REST-контроллеры, DTO и mapper
+globs: **/controller/**/*.java
+alwaysApply: false
+---
+
+# Контроллер
+
+Тонкий: `@Validated` → mapper в entity → сервис → mapper в response. Без бизнес-логики, без репозитория, без `try/catch`.
+
+- Пакеты: `controller.impl.admin` → `/admin/**` (`*ControllerAdmin`); `controller.impl.user` → `/user/**` (`*ControllerUser`); общее — `controller.impl`.
+- HTTP: `POST` create → `*Response`; `PUT`/`DELETE` → `HttpStatus.OK`; `GET` → `*Response`; списки → `GET …/all` + `Page<T>`; пагинация `page`/`size` через `PageableMapper` (0/10).
+- DTO — record в `controller.model.request|response`: `{Entity}CreateRequest` / `{Entity}UpdateRequest` / `{Entity}Response`. Jakarta + `@Schema`. Одна DTO на create/update — группы `Validation.Create` / `Validation.Update`.
+- `@Validated` на `@RequestBody`. Swagger: `@Tag` на классе, `@Operation` / `@Parameter` — по-русски.
+- Поля: `private final` `service`, при необходимости `mapper` / `pageableMapper`. Конструктор без `@Autowired`.
+
+```java
+// GOOD
+return TagModelMapper.toResponse(service.create(TagModelMapper.toTag(request)));
+```
+
+Mapper в `controller.mapper`: `public final`, private ctor, **static** `toX` / `toResponse` (как `TagModelMapper`). Не бин Spring. Связанные сущности — только id; полный объект грузит сервис. `@Component`-мапперы не копировать. Mapper не вызывает сервисы.
