@@ -1,0 +1,26 @@
+---
+description: Исключения сервиса, валидация DTO и RestExceptionHandler
+globs: src/main/java/**/*.java
+alwaysApply: false
+---
+
+# Ошибки
+
+Своих exception-классов нет. Контроллер исключения не ловит.
+
+Сервис бросает JDK-исключения с `String.format`, текст на английском:
+
+- `NoSuchElementException` — не найдено: `"Tag not found by id: %d"`
+- `IllegalArgumentException` — инвариант: null id, занятое имя, бизнес-правило
+
+```java
+// GOOD
+return repository.findById(id)
+    .orElseThrow(() -> new NoSuchElementException(String.format("Tag not found by id: %d", id)));
+
+// BAD — не возвращать Optional из сервиса, не глотать в контроллере
+```
+
+`getById` / поиск: `orElseThrow`. Валидация входа — Jakarta на record + `@Validated` на `@RequestBody`. Новые сущности — раздельные `*CreateRequest` / `*UpdateRequest`. Одна DTO на create/update — группы `Validation.Create` / `Validation.Update`.
+
+`RestExceptionHandler`: `NoSuchElementException` → 404; `IllegalArgumentException` и `MethodArgumentNotValidException` → 400 (`"field: message, …"`); прочее → 500, тело = `e.getMessage()`.

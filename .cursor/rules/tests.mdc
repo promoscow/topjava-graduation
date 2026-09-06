@@ -1,0 +1,15 @@
+---
+description: Интеграционные тесты сервисов и контроллеров
+globs: src/test/java/**/*.java
+alwaysApply: false
+---
+
+# Тесты
+
+Не моки слоёв, а `@SpringBootTest`. `@WebMvcTest` и Mockito не использовать.
+
+- База: `AbstractTest` + `DataBuilder`: `buildX()` без сохранения, `saveX()` в БД. Уникальные строки — `RandomStringUtils.secure().nextAlphanumeric(16)`.
+- Сервис: `*ServiceTest extends AbstractTest`, пакет `service.impl`, `@Autowired` на **интерфейс**. Happy path на метод; негатив — `assertThrows(NoSuchElementException|IllegalArgumentException)`. Имена: `create`, `updateFailsWhenIdIsNull`, `getFailsWhenNotFound`.
+- Контроллер: `*ControllerTest extends AbstractControllerTest` (полный MockMvc без Spring Security). Пакет зеркалит прод: `controller.impl.admin` / `user`.
+- MockMvc: `perform` → `.andDo(print())` → `status()` / `jsonPath`. Create: `isOk` + `$.id`. Update: PUT, затем GET. Delete: DELETE, затем GET → `isNotFound`. Валидация/бизнес-ошибка: `isBadRequest`.
+- Фикстуры — через `dataBuilder` или сервис, не SQL вручную.

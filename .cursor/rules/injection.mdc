@@ -1,0 +1,30 @@
+---
+description: Конструкторная инъекция и зависимости между слоями
+globs: src/main/java/**/*.java
+alwaysApply: false
+---
+
+# Инъекция
+
+- В проде — конструкторная инъекция **без** `@Autowired` и без Lombok `@RequiredArgsConstructor`. Поля `private final`.
+- Зависеть от **интерфейсов** (`UserService`, не `UserServiceImpl`).
+- Имена полей по роли: в сервисе `repository`, в контроллере `service`; mapper — `mapper` или `pageableMapper`.
+
+```java
+// GOOD
+@Service
+public class TagServiceImpl implements TagService {
+    private final TagRepository repository;
+    public TagServiceImpl(TagRepository repository) {
+        this.repository = repository;
+    }
+}
+
+// BAD
+@Autowired
+private TagRepository tagRepository;
+```
+
+- Контроллер не инжектит репозиторий.
+- Сервис другой сущности — через её сервис, не через чужой репозиторий.
+- Mapper не инжектит сервисы (не повторять `RestaurantModelMapper` → `ReviewService`).

@@ -1,0 +1,24 @@
+---
+description: Именование пакетов, классов, методов и DTO
+globs: **/*.java
+alwaysApply: false
+---
+
+# Именование
+
+Пакеты: `controller.impl[.admin|user]`, `controller.mapper`, `controller.model.request|response`, `service` + `service.impl`, `repository`, `entity`.
+
+| Слой | Имя |
+|---|---|
+| сервис | `{Entity}Service` / `{Entity}ServiceImpl` |
+| репозиторий | `{Entity}Repository` |
+| контроллер | `{Entity}Controller{Admin\|User}` |
+| mapper | `{Entity}ModelMapper` (исключение: `VoteMapper`) |
+| DTO | `{Entity}CreateRequest` / `{Entity}UpdateRequest` / `{Entity}Response` |
+| тест | то же + `Test` |
+
+- Сервис: `create`, `update`, `getById`, `getBy{Field}`, `getAll`, `getAllBy{Field}`, `delete`. Не `find*` на сервисе.
+- Репозиторий: `findBy*` / `existsBy*` / `countBy*`; кастомный JPQL — `findByIdWithDetails` или `getAllBy…`.
+- Mapper: `toUser` / `toTag` / `toResponse`; два сценария одной DTO — `toRestaurantForCreate` / `toRestaurantForUpdate`.
+- Локальные переменные — `var`. DTO — **record**. Сообщения об ошибках на английском; Swagger `@Tag` / `@Operation` / `@Schema` — на русском.
+- JSON-поля как в record (`userName` в `UserResponse`, не `username` entity).

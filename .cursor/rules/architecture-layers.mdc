@@ -1,0 +1,20 @@
+---
+description: Слои controller → mapper → service → repository → entity
+alwaysApply: true
+---
+
+# Слои
+
+Цепочка: **Controller → Mapper → Service → Repository → Entity**. Контроллер не ходит в репозиторий и не содержит бизнес-логики.
+
+- Контроллер: `@Validated` → mapper в entity → сервис → mapper в response.
+  Create: `Mapper.toResponse(service.create(Mapper.toX(request)))`.
+- URL: `/admin/**` → `controller.impl.admin.*ControllerAdmin`; `/user/**` → `controller.impl.user.*ControllerUser`; общее (`/users`, `/tags`, `/login`) → `controller.impl`.
+- HTTP: `POST` create → `*Response`; `PUT`/`DELETE` → `HttpStatus.OK`; `GET` → `*Response`; списки → `GET …/all` + `Page<T>`; пагинация `page`/`size` (дефолты 0/10 в `PageableMapper`).
+- DTO только в `controller.model.request|response`. Сервис принимает и возвращает **entity**.
+- Mapper задаёт связанные сущности **только id**; полный объект подгружает сервис. Новый mapper — `public final` со static-методами, не бин Spring (как `TagModelMapper`). `@Component`-мапперы — наследие, не копировать.
+- Сервис работает со **своим** репозиторием. Чужие сущности — только через их `*Service`.
+- Репозиторий — интерфейс `JpaRepository`, методы ровно под сервис. Для ассоциаций в ответе — `JOIN FETCH`; у страниц с fetch — `countQuery`.
+- Update: `id == null` → ошибка → `findById` stored → `Entity.enrichForUpdate(incoming, stored)` → `save(stored)`.
+- `@Transactional` на изменяющих методах сервиса; чтение — `@Transactional(readOnly = true)`. Не на контроллере.
+- Entity: JPA + `@Getter`/`@Setter`, `IDENTITY`, `enrichForUpdate`. `ManyToOne` обычно `LAZY`.
