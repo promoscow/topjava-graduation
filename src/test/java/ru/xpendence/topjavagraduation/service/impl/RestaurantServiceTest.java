@@ -8,13 +8,10 @@ import org.springframework.data.domain.Sort;
 import ru.xpendence.topjavagraduation.AbstractTest;
 import ru.xpendence.topjavagraduation.service.RestaurantService;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RestaurantServiceTest extends AbstractTest {
 
@@ -51,10 +48,57 @@ class RestaurantServiceTest extends AbstractTest {
 
     @Test
     void getChosen() {
+        dataBuilder.clearVotes();
         var restaurant = dataBuilder.saveRestaurant();
-        var user = dataBuilder.saveUser();
-        dataBuilder.saveVote(user, restaurant);
-        assertDoesNotThrow(() -> service.getChosen());
+        dataBuilder.saveVote(dataBuilder.saveUser(), restaurant);
+        assertEquals(restaurant.getId(), service.getChosen().getId());
+    }
+
+    @Test
+    void getChosenReturnsRestaurantWithMostVotesToday() {
+        dataBuilder.clearVotes();
+        var yesterdayLeader = dataBuilder.saveRestaurant();
+        var todayLeader = dataBuilder.saveRestaurant();
+        var yesterday = LocalDate.now().minusDays(1);
+
+        for (int i = 0; i < 5; i++) {
+            dataBuilder.saveVote(dataBuilder.saveUser(), yesterdayLeader, yesterday);
+        }
+        dataBuilder.saveVote(dataBuilder.saveUser(), todayLeader, LocalDate.now());
+
+        assertEquals(todayLeader.getId(), service.getChosen().getId());
+    }
+
+    @Test
+    void getChosenReturnsRestaurantWithHigherTodayVoteCount() {
+        dataBuilder.clearVotes();
+        var fewerVotesToday = dataBuilder.saveRestaurant();
+        var moreVotesToday = dataBuilder.saveRestaurant();
+        var today = LocalDate.now();
+
+        dataBuilder.saveVote(dataBuilder.saveUser(), fewerVotesToday, today);
+        for (int i = 0; i < 3; i++) {
+            dataBuilder.saveVote(dataBuilder.saveUser(), moreVotesToday, today);
+        }
+
+        assertEquals(moreVotesToday.getId(), service.getChosen().getId());
+    }
+
+    @Test
+    void getChosenFailsWhenNoVotesToday() {
+        dataBuilder.clearVotes();
+        var restaurant = dataBuilder.saveRestaurant();
+        dataBuilder.saveVote(dataBuilder.saveUser(), restaurant, LocalDate.now().minusDays(1));
+
+        assertThrows(NoSuchElementException.class, () -> service.getChosen());
+    }
+
+    @Test
+    void getChosenFailsWhenNoVotesAtAll() {
+        dataBuilder.clearVotes();
+        dataBuilder.saveRestaurant();
+
+        assertThrows(NoSuchElementException.class, () -> service.getChosen());
     }
 
     @Test

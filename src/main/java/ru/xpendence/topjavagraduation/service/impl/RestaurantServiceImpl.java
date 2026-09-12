@@ -8,6 +8,7 @@ import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.repository.RestaurantRepository;
 import ru.xpendence.topjavagraduation.service.RestaurantService;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -63,7 +64,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional(readOnly = true)
     public Restaurant getChosen() {
-        return repository.getIdsWithVotesCount(Pageable.ofSize(1)).getContent().get(0);
+        var today = LocalDate.now();
+        return repository.findChosenByVoteDate(today, Pageable.ofSize(1)).stream()
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("Chosen restaurant not found for date: %s", today)
+                ));
     }
 
     @Override

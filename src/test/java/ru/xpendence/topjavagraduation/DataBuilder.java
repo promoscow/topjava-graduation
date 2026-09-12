@@ -93,6 +93,10 @@ public class DataBuilder {
         return voteRepository.save(buildVote(user, restaurant, date));
     }
 
+    public void clearVotes() {
+        voteRepository.deleteAll();
+    }
+
     public Review buildReview(User user, Restaurant restaurant) {
         return buildReview(user, restaurant, 5, RandomStringUtils.secure().nextAlphanumeric(32));
     }

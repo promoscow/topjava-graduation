@@ -38,7 +38,7 @@ public class RestaurantControllerUser {
     }
 
     @GetMapping("/chosen")
-    @Operation(summary = "Получение выбранного ресторана")
+    @Operation(summary = "Победитель голосования за сегодня")
     public RestaurantResponse getChosen() {
         return mapper.toResponseForUser(service.getChosen());
     }
