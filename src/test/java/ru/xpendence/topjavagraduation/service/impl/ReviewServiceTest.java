@@ -11,11 +11,7 @@ import ru.xpendence.topjavagraduation.service.ReviewService;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ReviewServiceTest extends AbstractTest {
 
@@ -49,10 +45,18 @@ class ReviewServiceTest extends AbstractTest {
         var review = dataBuilder.saveReview(user, restaurant, 2, "Так себе");
         review.setRating(5);
         review.setText("Отлично");
-        service.update(review);
+        service.update(review, user.getId());
         var stored = service.getById(review.getId());
         assertEquals(5, stored.getRating());
         assertEquals("Отлично", stored.getText());
+    }
+
+    @Test
+    void updateFailsWhenReviewBelongsToAnotherUser() {
+        var review = dataBuilder.saveReview(user, restaurant, 2, "Так себе");
+        var anotherUser = dataBuilder.saveUser();
+        review.setRating(5);
+        assertThrows(IllegalArgumentException.class, () -> service.update(review, anotherUser.getId()));
     }
 
     @Test

@@ -9,13 +9,11 @@ import ru.xpendence.topjavagraduation.controller.model.request.TagCreateRequest;
 import ru.xpendence.topjavagraduation.controller.model.request.TagUpdateRequest;
 import ru.xpendence.topjavagraduation.service.TagService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.user;
 
 class TagControllerTest extends AbstractControllerTest {
 
@@ -28,6 +26,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         post("/tags")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -44,6 +43,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         post("/tags")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -59,6 +59,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         post("/tags")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -77,6 +78,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         put("/tags")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -84,7 +86,7 @@ class TagControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/tags/{id}", tag.getId()))
+        mockMvc.perform(get("/tags/{id}", tag.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(request.name()))
@@ -100,6 +102,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         put("/tags")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -112,7 +115,7 @@ class TagControllerTest extends AbstractControllerTest {
     void getById() throws Exception {
         var tag = dataBuilder.saveTag();
 
-        mockMvc.perform(get("/tags/{id}", tag.getId()))
+        mockMvc.perform(get("/tags/{id}", tag.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(tag.getId()))
@@ -122,7 +125,7 @@ class TagControllerTest extends AbstractControllerTest {
 
     @Test
     void getByIdFailsWhenNotFound() throws Exception {
-        mockMvc.perform(get("/tags/{id}", Long.MAX_VALUE))
+        mockMvc.perform(get("/tags/{id}", Long.MAX_VALUE).with(user()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -134,6 +137,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/tags/all")
+                                .with(user())
                                 .queryParam("name", tag.getName())
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
@@ -151,6 +155,7 @@ class TagControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/tags/all")
+                                .with(user())
                                 .queryParam("name", "zzz-no-match-zzz")
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
@@ -165,12 +170,12 @@ class TagControllerTest extends AbstractControllerTest {
     void deleteById() throws Exception {
         var tag = dataBuilder.saveTag();
 
-        mockMvc.perform(delete("/tags/{id}", tag.getId()))
+        mockMvc.perform(delete("/tags/{id}", tag.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/tags/{id}", tag.getId()))
+        mockMvc.perform(get("/tags/{id}", tag.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();

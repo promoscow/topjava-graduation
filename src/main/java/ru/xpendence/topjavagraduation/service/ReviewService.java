@@ -8,7 +8,7 @@ public interface ReviewService {
 
     Review create(Review review);
 
-    void update(Review review);
+    void update(Review review, Long currentUserId);
 
     Review getById(Long id);
 

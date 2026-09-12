@@ -47,14 +47,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public void update(Review review) {
+    public void update(Review review, Long currentUserId) {
         if (Objects.isNull(review.getId())) {
             throw new IllegalArgumentException("Review id is null.");
         }
-        var stored = repository.findById(review.getId())
+        var stored = repository.findByIdWithDetails(review.getId())
                 .orElseThrow(() -> new NoSuchElementException(
                         String.format("Review not found by id: %d", review.getId())
                 ));
+        if (!stored.getUser().getId().equals(currentUserId)) {
+            throw new IllegalArgumentException(
+                    String.format("Review id: %d does not belong to user id: %d", review.getId(), currentUserId)
+            );
+        }
         Review.enrichForUpdate(review, stored);
         repository.save(stored);
     }

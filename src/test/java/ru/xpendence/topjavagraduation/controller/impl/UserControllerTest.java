@@ -9,13 +9,11 @@ import ru.xpendence.topjavagraduation.controller.model.request.UserCreateRequest
 import ru.xpendence.topjavagraduation.controller.model.request.UserUpdateRequest;
 import ru.xpendence.topjavagraduation.service.UserService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.user;
 
 class UserControllerTest extends AbstractControllerTest {
 
@@ -82,6 +80,7 @@ class UserControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         put("/users")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -89,7 +88,7 @@ class UserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/users/{id}", user.getId()))
+        mockMvc.perform(get("/users/{id}", user.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userName").value(request.username()))
@@ -106,6 +105,7 @@ class UserControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         put("/users")
+                                .with(user())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -118,7 +118,7 @@ class UserControllerTest extends AbstractControllerTest {
     void getById() throws Exception {
         var user = dataBuilder.saveUser();
 
-        mockMvc.perform(get("/users/{id}", user.getId()))
+        mockMvc.perform(get("/users/{id}", user.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
@@ -128,7 +128,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void getByIdFailsWhenNotFound() throws Exception {
-        mockMvc.perform(get("/users/{id}", Long.MAX_VALUE))
+        mockMvc.perform(get("/users/{id}", Long.MAX_VALUE).with(user()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -140,6 +140,7 @@ class UserControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/users/all")
+                                .with(user())
                                 .queryParam("username", user.getUsername())
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
@@ -157,6 +158,7 @@ class UserControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/users/all")
+                                .with(user())
                                 .queryParam("username", "zzz-no-match-zzz")
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
@@ -171,12 +173,12 @@ class UserControllerTest extends AbstractControllerTest {
     void deleteById() throws Exception {
         var user = dataBuilder.saveUser();
 
-        mockMvc.perform(delete("/users/{id}", user.getId()))
+        mockMvc.perform(delete("/users/{id}", user.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/users/{id}", user.getId()))
+        mockMvc.perform(get("/users/{id}", user.getId()).with(user()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();

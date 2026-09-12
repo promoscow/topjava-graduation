@@ -8,22 +8,22 @@ import ru.xpendence.topjavagraduation.controller.model.request.ReviewCreateReque
 import ru.xpendence.topjavagraduation.controller.model.request.ReviewUpdateRequest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 import ru.xpendence.topjavagraduation.entity.User;
+import ru.xpendence.topjavagraduation.entity.type.RoleType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.jwtUser;
 
 class ReviewControllerUserTest extends AbstractControllerTest {
 
-    private User user;
+    private User reviewer;
     private Restaurant restaurant;
 
     @BeforeEach
     void setUp() {
-        user = dataBuilder.saveUser();
+        reviewer = dataBuilder.saveUser();
         restaurant = dataBuilder.saveRestaurant();
     }
 
@@ -31,14 +31,16 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     void create() throws Exception {
         mockMvc.perform(
                         post("/user/reviews")
+                                .with(jwtUser(reviewer, RoleType.USER.name()))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(
-                                        new ReviewCreateRequest(user.getId(), restaurant.getId(), 5, "Отлично")
+                                        new ReviewCreateRequest(restaurant.getId(), 5, "Отлично")
                                 ))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.userId").value(reviewer.getId()))
                 .andExpect(jsonPath("$.rating").value(5))
                 .andExpect(jsonPath("$.text").value("Отлично"))
                 .andReturn();
@@ -46,9 +48,10 @@ class ReviewControllerUserTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        var review = dataBuilder.saveReview(user, restaurant, 3, "Средне");
+        var review = dataBuilder.saveReview(reviewer, restaurant, 3, "Средне");
         mockMvc.perform(
                         put("/user/reviews")
+                                .with(jwtUser(reviewer, RoleType.USER.name()))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(
                                         new ReviewUpdateRequest(review.getId(), 4, "Лучше")
@@ -60,9 +63,29 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateFailsWhenReviewBelongsToAnotherUser() throws Exception {
+        var review = dataBuilder.saveReview(reviewer, restaurant, 3, "Средне");
+        var anotherUser = dataBuilder.saveUser();
+        mockMvc.perform(
+                        put("/user/reviews")
+                                .with(jwtUser(anotherUser, RoleType.USER.name()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(
+                                        new ReviewUpdateRequest(review.getId(), 4, "Чужой")
+                                ))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
     void getById() throws Exception {
-        var review = dataBuilder.saveReview(user, restaurant);
-        mockMvc.perform(get("/user/reviews/{id}", review.getId()))
+        var review = dataBuilder.saveReview(reviewer, restaurant);
+        mockMvc.perform(
+                        get("/user/reviews/{id}", review.getId())
+                                .with(jwtUser(reviewer, RoleType.USER.name()))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(review.getId()))
@@ -71,9 +94,10 @@ class ReviewControllerUserTest extends AbstractControllerTest {
 
     @Test
     void getByUserIdAndRestaurantId() throws Exception {
-        var review = dataBuilder.saveReview(user, restaurant);
+        var review = dataBuilder.saveReview(reviewer, restaurant);
         mockMvc.perform(
-                        get("/user/reviews/user/{userId}/restaurant/{restaurantId}", user.getId(), restaurant.getId())
+                        get("/user/reviews/me/restaurant/{restaurantId}", restaurant.getId())
+                                .with(jwtUser(reviewer, RoleType.USER.name()))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -83,8 +107,11 @@ class ReviewControllerUserTest extends AbstractControllerTest {
 
     @Test
     void getAllByRestaurantId() throws Exception {
-        dataBuilder.saveReview(user, restaurant);
-        mockMvc.perform(get("/user/reviews/restaurant/{restaurantId}", restaurant.getId()))
+        dataBuilder.saveReview(reviewer, restaurant);
+        mockMvc.perform(
+                        get("/user/reviews/restaurant/{restaurantId}", restaurant.getId())
+                                .with(jwtUser(reviewer, RoleType.USER.name()))
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty())
@@ -95,13 +122,28 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     void createThrowsMethodArgumentNotValidException() throws Exception {
         mockMvc.perform(
                         post("/user/reviews")
+                                .with(jwtUser(reviewer, RoleType.USER.name()))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(
-                                        new ReviewCreateRequest(user.getId(), restaurant.getId(), 6, "Плохая оценка")
+                                        new ReviewCreateRequest(restaurant.getId(), 6, "Плохая оценка")
                                 ))
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void createReturnsUnauthorizedWhenAnonymous() throws Exception {
+        mockMvc.perform(
+                        post("/user/reviews")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(
+                                        new ReviewCreateRequest(restaurant.getId(), 5, "Отлично")
+                                ))
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
                 .andReturn();
     }
 }

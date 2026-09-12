@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ru.xpendence.topjavagraduation.AbstractTest;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+
 public abstract class AbstractControllerTest extends AbstractTest {
 
     @Autowired
@@ -24,6 +26,7 @@ public abstract class AbstractControllerTest extends AbstractTest {
     void setup() {
         this.mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
+                .apply(springSecurity())
                 .build();
     }
 }

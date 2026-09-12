@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.user;
 
 class RestaurantControllerUserTest extends AbstractControllerTest {
 
@@ -17,6 +18,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         var restaurant = dataBuilder.saveRestaurant();
         mockMvc.perform(
                         get("/user/restaurants/{id}", restaurant.getId())
+                                .with(user())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -31,6 +33,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         dataBuilder.saveDish(restaurant, false);
         mockMvc.perform(
                         get("/user/restaurants/{id}", restaurant.getId())
+                                .with(user())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -44,7 +47,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         dataBuilder.clearVotes();
         var restaurant = dataBuilder.saveRestaurant();
         dataBuilder.saveVote(dataBuilder.saveUser(), restaurant);
-        mockMvc.perform(get("/user/restaurants/chosen"))
+        mockMvc.perform(get("/user/restaurants/chosen").with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(restaurant.getId()))
@@ -63,7 +66,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         }
         dataBuilder.saveVote(dataBuilder.saveUser(), todayLeader, LocalDate.now());
 
-        mockMvc.perform(get("/user/restaurants/chosen"))
+        mockMvc.perform(get("/user/restaurants/chosen").with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(todayLeader.getId()))
@@ -82,7 +85,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
             dataBuilder.saveVote(dataBuilder.saveUser(), moreVotesToday, today);
         }
 
-        mockMvc.perform(get("/user/restaurants/chosen"))
+        mockMvc.perform(get("/user/restaurants/chosen").with(user()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(moreVotesToday.getId()))
@@ -95,7 +98,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         var restaurant = dataBuilder.saveRestaurant();
         dataBuilder.saveVote(dataBuilder.saveUser(), restaurant, LocalDate.now().minusDays(1));
 
-        mockMvc.perform(get("/user/restaurants/chosen"))
+        mockMvc.perform(get("/user/restaurants/chosen").with(user()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -106,7 +109,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         dataBuilder.clearVotes();
         dataBuilder.saveRestaurant();
 
-        mockMvc.perform(get("/user/restaurants/chosen"))
+        mockMvc.perform(get("/user/restaurants/chosen").with(user()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -117,6 +120,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
         dataBuilder.saveRestaurant();
         mockMvc.perform(
                         get("/user/restaurants/all")
+                                .with(user())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

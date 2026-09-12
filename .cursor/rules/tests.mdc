@@ -10,6 +10,7 @@ alwaysApply: false
 
 - База: `AbstractTest` + `DataBuilder`: `buildX()` без сохранения, `saveX()` в БД. Уникальные строки — `RandomStringUtils.secure().nextAlphanumeric(16)`.
 - Сервис: `*ServiceTest extends AbstractTest`, пакет `service.impl`, `@Autowired` на **интерфейс**. Happy path на метод; негатив — `assertThrows(NoSuchElementException|IllegalArgumentException)`. Имена: `create`, `updateFailsWhenIdIsNull`, `getFailsWhenNotFound`.
-- Контроллер: `*ControllerTest extends AbstractControllerTest` (полный MockMvc без Spring Security). Пакет зеркалит прод: `controller.impl.admin` / `user`.
-- MockMvc: `perform` → `.andDo(print())` → `status()` / `jsonPath`. Create: `isOk` + `$.id`. Update: PUT, затем GET. Delete: DELETE, затем GET → `isNotFound`. Валидация/бизнес-ошибка: `isBadRequest`.
+- Контроллер: `*ControllerTest extends AbstractControllerTest` (MockMvc **с** `springSecurity()`). Пакет зеркалит прод: `controller.impl.admin` / `user`.
+- Auth в MockMvc: `.with(jwtUser(user, "USER"))` / `.with(user())` / `.with(admin())` из `JwtUserRequestPostProcessors` (authorities `"USER"` / `"ADMIN"`, не `ROLE_*`). Публичные `POST /login`, `POST /users` — без auth.
+- MockMvc: `perform` → `.andDo(print())` → `status()` / `jsonPath`. Create: `isOk` + `$.id`. Update: PUT, затем GET. Delete: DELETE, затем GET → `isNotFound`. Валидация/бизнес-ошибка: `isBadRequest`. Без auth → `isUnauthorized`; неверная роль → `isForbidden`.
 - Фикстуры — через `dataBuilder` или сервис, не SQL вручную.

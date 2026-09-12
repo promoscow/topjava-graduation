@@ -15,12 +15,11 @@ import ru.xpendence.topjavagraduation.service.DishService;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.admin;
 
 class DishControllerAdminTest extends AbstractControllerTest {
 
@@ -39,6 +38,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
         var dish = dataBuilder.buildDish(restaurant);
         mockMvc.perform(
                 post("/admin/dishes")
+                        .with(admin())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toCreateRequest(dish)))
         )
@@ -53,6 +53,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
         var dish = dataBuilder.saveDish(restaurant);
         mockMvc.perform(
                 put("/admin/dishes")
+                        .with(admin())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toUpdateRequest(dish)))
         )
@@ -68,6 +69,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
         service.update(dish);
         mockMvc.perform(
                 put("/admin/dishes/reset/restaurant/{restaurantId}", restaurant.getId())
+        .with(admin())
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -79,6 +81,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     void resetMenuReturnsNotFoundWhenRestaurantHasNoDishes() throws Exception {
         mockMvc.perform(
                 put("/admin/dishes/reset/restaurant/{restaurantId}", restaurant.getId())
+        .with(admin())
         )
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -90,6 +93,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
         var dish = dataBuilder.saveDish(restaurant);
         mockMvc.perform(
                         get("/admin/dishes/{id}", dish.getId())
+                .with(admin())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -102,6 +106,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
         var dish = dataBuilder.saveDish(restaurant);
         mockMvc.perform(
                         get("/admin/dishes/all/restaurant/{restaurantId}", restaurant.getId())
+                                .with(admin())
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
                 )

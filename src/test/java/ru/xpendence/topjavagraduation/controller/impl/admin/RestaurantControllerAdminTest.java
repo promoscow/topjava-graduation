@@ -7,12 +7,11 @@ import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
 import ru.xpendence.topjavagraduation.controller.model.request.RestaurantRequest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.admin;
 
 class RestaurantControllerAdminTest extends AbstractControllerTest {
 
@@ -21,6 +20,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
         var restaurant = dataBuilder.buildRestaurant();
         mockMvc.perform(
                 post("/admin/restaurants")
+                        .with(admin())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toRequest(restaurant)))
         )
@@ -37,6 +37,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
         restaurant.setName(name);
         mockMvc.perform(
                 put("/admin/restaurants")
+                        .with(admin())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toRequest(restaurant)))
         )
@@ -50,6 +51,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
         var restaurant = dataBuilder.saveRestaurant();
         mockMvc.perform(
                 get("/admin/restaurants/{id}", restaurant.getId())
+        .with(admin())
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -62,6 +64,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
         dataBuilder.saveRestaurant();
         mockMvc.perform(
                 get("/admin/restaurants/all")
+        .with(admin())
         )
                 .andDo(print())
                 .andExpect(status().isOk())

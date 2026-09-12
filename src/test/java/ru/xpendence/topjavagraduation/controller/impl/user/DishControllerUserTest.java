@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.user;
 
 class DishControllerUserTest extends AbstractControllerTest {
 
@@ -24,6 +25,7 @@ class DishControllerUserTest extends AbstractControllerTest {
         var dish = dataBuilder.saveDish(restaurant, true);
         mockMvc.perform(
                         get("/user/dishes/{id}", dish.getId())
+                                .with(user())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -36,6 +38,7 @@ class DishControllerUserTest extends AbstractControllerTest {
         var dish = dataBuilder.saveDish(restaurant, false);
         mockMvc.perform(
                         get("/user/dishes/{id}", dish.getId())
+                                .with(user())
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -48,6 +51,7 @@ class DishControllerUserTest extends AbstractControllerTest {
         dataBuilder.saveDish(restaurant, false);
         mockMvc.perform(
                         get("/user/dishes/all/restaurant/{restaurantId}", restaurant.getId())
+                                .with(user())
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
                 )

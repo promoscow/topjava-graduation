@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.admin;
 
 class ReviewControllerAdminTest extends AbstractControllerTest {
 
@@ -26,7 +27,7 @@ class ReviewControllerAdminTest extends AbstractControllerTest {
     @Test
     void getById() throws Exception {
         var review = dataBuilder.saveReview(user, restaurant);
-        mockMvc.perform(get("/admin/reviews/{id}", review.getId()))
+        mockMvc.perform(get("/admin/reviews/{id}", review.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(review.getId()))
@@ -36,7 +37,7 @@ class ReviewControllerAdminTest extends AbstractControllerTest {
     @Test
     void getAllByRestaurantId() throws Exception {
         dataBuilder.saveReview(user, restaurant);
-        mockMvc.perform(get("/admin/reviews/restaurant/{restaurantId}", restaurant.getId()))
+        mockMvc.perform(get("/admin/reviews/restaurant/{restaurantId}", restaurant.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty())
@@ -46,12 +47,12 @@ class ReviewControllerAdminTest extends AbstractControllerTest {
     @Test
     void deleteReview() throws Exception {
         var review = dataBuilder.saveReview(user, restaurant);
-        mockMvc.perform(delete("/admin/reviews/{id}", review.getId()))
+        mockMvc.perform(delete("/admin/reviews/{id}", review.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/admin/reviews/{id}", review.getId()))
+        mockMvc.perform(get("/admin/reviews/{id}", review.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();

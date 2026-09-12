@@ -11,13 +11,11 @@ import ru.xpendence.topjavagraduation.entity.type.RoleType;
 import ru.xpendence.topjavagraduation.service.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProcessors.admin;
 
 class UserControllerAdminTest extends AbstractControllerTest {
 
@@ -35,6 +33,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         post("/admin/users")
+                                .with(admin())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -57,6 +56,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         put("/admin/users")
+                                .with(admin())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -64,7 +64,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/admin/users/{id}", user.getId()))
+        mockMvc.perform(get("/admin/users/{id}", user.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userName").value(request.username()))
@@ -75,7 +75,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
     void getById() throws Exception {
         var user = dataBuilder.saveUser();
 
-        mockMvc.perform(get("/admin/users/{id}", user.getId()))
+        mockMvc.perform(get("/admin/users/{id}", user.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
@@ -87,7 +87,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
     void getByUsername() throws Exception {
         var user = dataBuilder.saveUser();
 
-        mockMvc.perform(get("/admin/users/username/{username}", user.getUsername()))
+        mockMvc.perform(get("/admin/users/username/{username}", user.getUsername()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
@@ -101,6 +101,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/admin/users/all")
+                                .with(admin())
                                 .queryParam("username", user.getUsername())
                                 .queryParam("page", "0")
                                 .queryParam("size", "20")
@@ -116,7 +117,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
     void addRole() throws Exception {
         var user = dataBuilder.saveUser();
 
-        mockMvc.perform(put("/admin/users/{id}/roles/{roleId}", user.getId(), ADMIN_ROLE_ID))
+        mockMvc.perform(put("/admin/users/{id}/roles/{roleId}", user.getId(), ADMIN_ROLE_ID).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -134,7 +135,7 @@ class UserControllerAdminTest extends AbstractControllerTest {
         var user = dataBuilder.saveUser();
         userService.addRole(user.getId(), ADMIN_ROLE_ID);
 
-        mockMvc.perform(delete("/admin/users/{id}/roles/{roleId}", user.getId(), ADMIN_ROLE_ID))
+        mockMvc.perform(delete("/admin/users/{id}/roles/{roleId}", user.getId(), ADMIN_ROLE_ID).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -151,12 +152,12 @@ class UserControllerAdminTest extends AbstractControllerTest {
     void deleteById() throws Exception {
         var user = dataBuilder.saveUser();
 
-        mockMvc.perform(delete("/admin/users/{id}", user.getId()))
+        mockMvc.perform(delete("/admin/users/{id}", user.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        mockMvc.perform(get("/admin/users/{id}", user.getId()))
+        mockMvc.perform(get("/admin/users/{id}", user.getId()).with(admin()))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn();

@@ -5,10 +5,6 @@ import jakarta.validation.constraints.NotNull;
 public record VoteRequest(
 
         @NotNull
-        Long userId,
-   
-
-        @NotNull
         Long restaurantId
 ) {
 }

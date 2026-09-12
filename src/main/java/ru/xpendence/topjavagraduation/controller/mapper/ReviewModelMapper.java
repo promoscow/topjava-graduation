@@ -13,13 +13,13 @@ import java.time.LocalDate;
 @Component
 public class ReviewModelMapper {
 
-    public Review toReview(ReviewCreateRequest request) {
+    public Review toReview(ReviewCreateRequest request, Long userId) {
         var review = new Review();
         review.setRating(request.rating());
         review.setText(request.text());
         review.setDate(LocalDate.now());
         var user = new User();
-        user.setId(request.userId());
+        user.setId(userId);
         review.setUser(user);
         var restaurant = new Restaurant();
         restaurant.setId(request.restaurantId());

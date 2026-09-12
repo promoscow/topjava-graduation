@@ -5,15 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.xpendence.topjavagraduation.config.security.model.JwtUser;
 import ru.xpendence.topjavagraduation.controller.mapper.PageableMapper;
 import ru.xpendence.topjavagraduation.controller.mapper.ReviewModelMapper;
 import ru.xpendence.topjavagraduation.controller.model.request.ReviewCreateRequest;
@@ -41,9 +36,11 @@ public class ReviewControllerUser {
     public ReviewResponse create(
             @Parameter(description = "Запрос на создание отзыва")
             @Validated
-            @RequestBody ReviewCreateRequest request
+            @RequestBody ReviewCreateRequest request,
+
+            @AuthenticationPrincipal JwtUser jwtUser
     ) {
-        return mapper.toResponse(service.create(mapper.toReview(request)));
+        return mapper.toResponse(service.create(mapper.toReview(request, jwtUser.getId())));
     }
 
     @PutMapping
@@ -51,9 +48,11 @@ public class ReviewControllerUser {
     public HttpStatus update(
             @Parameter(description = "Запрос на обновление отзыва")
             @Validated
-            @RequestBody ReviewUpdateRequest request
+            @RequestBody ReviewUpdateRequest request,
+
+            @AuthenticationPrincipal JwtUser jwtUser
     ) {
-        service.update(mapper.toReview(request));
+        service.update(mapper.toReview(request), jwtUser.getId());
         return HttpStatus.OK;
     }
 
@@ -66,16 +65,15 @@ public class ReviewControllerUser {
         return mapper.toResponse(service.getById(id));
     }
 
-    @GetMapping("/user/{userId}/restaurant/{restaurantId}")
-    @Operation(summary = "Получение отзыва пользователя по ресторану")
+    @GetMapping("/me/restaurant/{restaurantId}")
+    @Operation(summary = "Получение отзыва текущего пользователя по ресторану")
     public ReviewResponse getByUserIdAndRestaurantId(
-            @Parameter(description = "Идентификатор пользователя")
-            @PathVariable Long userId,
-
             @Parameter(description = "Идентификатор ресторана")
-            @PathVariable Long restaurantId
+            @PathVariable Long restaurantId,
+
+            @AuthenticationPrincipal JwtUser jwtUser
     ) {
-        return mapper.toResponse(service.getByUserIdAndRestaurantId(userId, restaurantId));
+        return mapper.toResponse(service.getByUserIdAndRestaurantId(jwtUser.getId(), restaurantId));
     }
 
     @GetMapping("/restaurant/{restaurantId}")

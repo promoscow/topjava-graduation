@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @Component
 public class VoteMapper {
 
-    public Vote toVote(VoteRequest request) {
+    public Vote toVote(VoteRequest request, Long userId) {
         var vote = new Vote();
         vote.setDate(LocalDate.now());
         var user = new User();
-        user.setId(request.userId());
+        user.setId(userId);
         vote.setUser(user);
         var restaurant = new Restaurant();
         restaurant.setId(request.restaurantId());
