@@ -61,8 +61,21 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional(readOnly = true)
+    public Dish getActiveById(Long id) {
+        return repository.findActiveByIdWithRestaurant(id)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Dish not found by id: %d", id)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable) {
         return repository.getAllByRestaurantId(restaurantId, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Dish> getAllActiveByRestaurantId(Long restaurantId, Pageable pageable) {
+        return repository.getAllActiveByRestaurantId(restaurantId, pageable);
     }
 
     @Override

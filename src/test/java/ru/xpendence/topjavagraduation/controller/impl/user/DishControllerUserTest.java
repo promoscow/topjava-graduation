@@ -21,7 +21,7 @@ class DishControllerUserTest extends AbstractControllerTest {
 
     @Test
     void getById() throws Exception {
-        var dish = dataBuilder.saveDish(restaurant);
+        var dish = dataBuilder.saveDish(restaurant, true);
         mockMvc.perform(
                         get("/user/dishes/{id}", dish.getId())
                 )
@@ -32,8 +32,20 @@ class DishControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
-    void getAllByRestaurantId() throws Exception {
-        var dish = dataBuilder.saveDish(restaurant);
+    void getByIdFailsWhenInactive() throws Exception {
+        var dish = dataBuilder.saveDish(restaurant, false);
+        mockMvc.perform(
+                        get("/user/dishes/{id}", dish.getId())
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    void getAllByRestaurantIdReturnsOnlyActive() throws Exception {
+        var active = dataBuilder.saveDish(restaurant, true);
+        dataBuilder.saveDish(restaurant, false);
         mockMvc.perform(
                         get("/user/dishes/all/restaurant/{restaurantId}", restaurant.getId())
                                 .queryParam("page", "0")
@@ -41,6 +53,8 @@ class DishControllerUserTest extends AbstractControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].id").value(active.getId()))
                 .andReturn();
     }
 }

@@ -13,11 +13,7 @@ import ru.xpendence.topjavagraduation.service.DishService;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DishServiceTest extends AbstractTest {
 
@@ -70,6 +66,27 @@ class DishServiceTest extends AbstractTest {
     void getAllByRestaurantId() {
         dataBuilder.saveDish(restaurant);
         assertFalse(service.getAllByRestaurantId(restaurant.getId(), Pageable.unpaged()).isEmpty());
+    }
+
+    @Test
+    void getActiveById() {
+        var dish = dataBuilder.saveDish(restaurant, true);
+        assertDoesNotThrow(() -> service.getActiveById(dish.getId()));
+    }
+
+    @Test
+    void getActiveByIdFailsWhenInactive() {
+        var dish = dataBuilder.saveDish(restaurant, false);
+        assertThrows(NoSuchElementException.class, () -> service.getActiveById(dish.getId()));
+    }
+
+    @Test
+    void getAllActiveByRestaurantId() {
+        var active = dataBuilder.saveDish(restaurant, true);
+        dataBuilder.saveDish(restaurant, false);
+        var page = service.getAllActiveByRestaurantId(restaurant.getId(), Pageable.unpaged());
+        assertEquals(1, page.getTotalElements());
+        assertEquals(active.getId(), page.getContent().getFirst().getId());
     }
 
     @Test

@@ -3,18 +3,8 @@ package ru.xpendence.topjavagraduation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.xpendence.topjavagraduation.entity.Dish;
-import ru.xpendence.topjavagraduation.entity.Restaurant;
-import ru.xpendence.topjavagraduation.entity.Review;
-import ru.xpendence.topjavagraduation.entity.Tag;
-import ru.xpendence.topjavagraduation.entity.User;
-import ru.xpendence.topjavagraduation.entity.Vote;
-import ru.xpendence.topjavagraduation.repository.DishRepository;
-import ru.xpendence.topjavagraduation.repository.RestaurantRepository;
-import ru.xpendence.topjavagraduation.repository.ReviewRepository;
-import ru.xpendence.topjavagraduation.repository.TagRepository;
-import ru.xpendence.topjavagraduation.repository.UserRepository;
-import ru.xpendence.topjavagraduation.repository.VoteRepository;
+import ru.xpendence.topjavagraduation.entity.*;
+import ru.xpendence.topjavagraduation.repository.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -64,6 +54,12 @@ public class DataBuilder {
 
     public Dish saveDish(Restaurant restaurant) {
         return dishRepository.save(buildDish(restaurant));
+    }
+
+    public Dish saveDish(Restaurant restaurant, boolean active) {
+        var dish = buildDish(restaurant);
+        dish.setActive(active);
+        return dishRepository.save(dish);
     }
 
     public User buildUser() {

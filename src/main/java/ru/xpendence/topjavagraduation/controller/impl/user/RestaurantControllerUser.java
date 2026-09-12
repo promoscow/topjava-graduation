@@ -34,13 +34,13 @@ public class RestaurantControllerUser {
             @Parameter(description = "Идентификатор ресторана")
             @PathVariable Long id
     ) {
-        return mapper.toResponse(service.getById(id));
+        return mapper.toResponseForUser(service.getById(id));
     }
 
     @GetMapping("/chosen")
     @Operation(summary = "Получение выбранного ресторана")
     public RestaurantResponse getChosen() {
-        return mapper.toResponse(service.getChosen());
+        return mapper.toResponseForUser(service.getChosen());
     }
 
     @Operation(summary = "Получение всех ресторанов")
@@ -53,6 +53,6 @@ public class RestaurantControllerUser {
             @Parameter(description = "Размер страницы")
             @RequestParam(required = false)
             Integer size) {
-        return service.getAll(pageableMapper.toPageable(page, size)).map(mapper::toResponse);
+        return service.getAll(pageableMapper.toPageable(page, size)).map(mapper::toResponseForUser);
     }
 }

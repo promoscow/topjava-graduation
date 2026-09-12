@@ -46,6 +46,15 @@ public interface DishService {
     Dish getById(Long id);
 
     /**
+     * Возвращает активное блюдо по идентификатору.
+     *
+     * @param id идентификатор блюда
+     * @return найденное активное блюдо
+     * @throws java.util.NoSuchElementException если блюдо не найдено или неактивно
+     */
+    Dish getActiveById(Long id);
+
+    /**
      * Возвращает страницу блюд ресторана — как активных, так и снятых с меню.
      *
      * @param restaurantId идентификатор ресторана
@@ -53,6 +62,15 @@ public interface DishService {
      * @return страница блюд ресторана
      */
     Page<Dish> getAllByRestaurantId(Long restaurantId, Pageable pageable);
+
+    /**
+     * Возвращает страницу только активных блюд ресторана.
+     *
+     * @param restaurantId идентификатор ресторана
+     * @param pageable     параметры страницы
+     * @return страница активных блюд ресторана
+     */
+    Page<Dish> getAllActiveByRestaurantId(Long restaurantId, Pageable pageable);
 
     /**
      * Безвозвратно удаляет блюдо из базы. Чтобы временно убрать блюдо из меню,

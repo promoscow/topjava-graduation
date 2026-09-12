@@ -32,11 +32,11 @@ public class DishControllerUser {
             @PathVariable
             Long id
     ) {
-        return mapper.toResponse(service.getById(id));
+        return mapper.toResponse(service.getActiveById(id));
     }
 
     @GetMapping("/all/restaurant/{restaurantId}")
-    @Operation(summary = "Получение блюд ресторана по ID ресторана")
+    @Operation(summary = "Получение активных блюд ресторана по ID ресторана")
     public Page<DishResponse> getAllByRestaurantId(
             @Parameter(description = "ID ресторана")
             @PathVariable
@@ -50,7 +50,7 @@ public class DishControllerUser {
             @RequestParam(required = false)
             Integer size
     ) {
-        return service.getAllByRestaurantId(restaurantId, pageableMapper.toPageable(page, size))
+        return service.getAllActiveByRestaurantId(restaurantId, pageableMapper.toPageable(page, size))
                 .map(mapper::toResponse);
     }
 }

@@ -48,4 +48,18 @@ public class RestaurantModelMapper {
                 reviewService.countByRestaurantId(restaurant.getId())
         );
     }
+
+    public RestaurantResponse toResponseForUser(Restaurant restaurant) {
+        return new RestaurantResponse(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getDishes().stream()
+                        .filter(d -> Boolean.TRUE.equals(d.getActive()))
+                        .map(dishModelMapper::toResponse)
+                        .collect(Collectors.toList()),
+                restaurant.getVotes().stream().map(voteMapper::toResponse).collect(Collectors.toList()),
+                reviewService.getAverageRatingByRestaurantId(restaurant.getId()),
+                reviewService.countByRestaurantId(restaurant.getId())
+        );
+    }
 }

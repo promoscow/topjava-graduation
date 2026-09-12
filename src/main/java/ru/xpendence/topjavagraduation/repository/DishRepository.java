@@ -27,11 +27,20 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = :id")
     Optional<Dish> findByIdWithRestaurant(@Param("id") Long id);
 
+    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = :id AND d.active = true")
+    Optional<Dish> findActiveByIdWithRestaurant(@Param("id") Long id);
+
     @Query(
             value = "SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.restaurant.id = :restaurantId",
             countQuery = "SELECT COUNT(d) FROM Dish d WHERE d.restaurant.id = :restaurantId"
     )
     Page<Dish> getAllByRestaurantId(@Param("restaurantId") Long restaurantId, Pageable pageable);
+
+    @Query(
+            value = "SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.restaurant.id = :restaurantId AND d.active = true",
+            countQuery = "SELECT COUNT(d) FROM Dish d WHERE d.restaurant.id = :restaurantId AND d.active = true"
+    )
+    Page<Dish> getAllActiveByRestaurantId(@Param("restaurantId") Long restaurantId, Pageable pageable);
 
     void deleteById(Long id);
 }

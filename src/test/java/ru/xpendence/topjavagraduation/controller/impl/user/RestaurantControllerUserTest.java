@@ -14,11 +14,26 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     void getById() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
         mockMvc.perform(
-                        get("/admin/restaurants/{id}", restaurant.getId())
+                        get("/user/restaurants/{id}", restaurant.getId())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(restaurant.getId()))
+                .andReturn();
+    }
+
+    @Test
+    void getByIdReturnsOnlyActiveDishes() throws Exception {
+        var restaurant = dataBuilder.saveRestaurant();
+        var active = dataBuilder.saveDish(restaurant, true);
+        dataBuilder.saveDish(restaurant, false);
+        mockMvc.perform(
+                        get("/user/restaurants/{id}", restaurant.getId())
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.dishes.length()").value(1))
+                .andExpect(jsonPath("$.dishes[0].id").value(active.getId()))
                 .andReturn();
     }
 
@@ -40,7 +55,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     void getAll() throws Exception {
         dataBuilder.saveRestaurant();
         mockMvc.perform(
-                        get("/admin/restaurants/all")
+                        get("/user/restaurants/all")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
