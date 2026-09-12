@@ -2,6 +2,7 @@ package ru.xpendence.topjavagraduation.controller.impl.admin;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): валидный запрос -> успешное создание блюда")
     void create() throws Exception {
         var dish = dataBuilder.buildDish(restaurant);
         mockMvc.perform(
@@ -49,6 +51,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): корректные данные -> успешное обновление")
     void update() throws Exception {
         var dish = dataBuilder.saveDish(restaurant);
         mockMvc.perform(
@@ -63,6 +66,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("resetMenu(): активные блюда ресторана -> становятся неактивными")
     void resetMenu() throws Exception {
         var dish = dataBuilder.saveDish(restaurant);
         dish.setActive(true);
@@ -78,6 +82,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("resetMenu(): у ресторана нет блюд -> 404 Not Found")
     void resetMenuReturnsNotFoundWhenRestaurantHasNoDishes() throws Exception {
         mockMvc.perform(
                 put("/admin/dishes/reset/restaurant/{restaurantId}", restaurant.getId())
@@ -89,6 +94,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение блюда")
     void getById() throws Exception {
         var dish = dataBuilder.saveDish(restaurant);
         mockMvc.perform(
@@ -102,6 +108,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAllByRestaurantId(): блюда ресторана есть -> успешное получение страницы")
     void getAllByRestaurantId() throws Exception {
         var dish = dataBuilder.saveDish(restaurant);
         mockMvc.perform(

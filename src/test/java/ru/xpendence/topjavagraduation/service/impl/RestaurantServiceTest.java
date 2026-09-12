@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -19,12 +20,14 @@ class RestaurantServiceTest extends AbstractTest {
     private RestaurantService service;
 
     @Test
+    @DisplayName("create(): валидный ресторан -> успешное создание")
     void create() {
         var restaurant = dataBuilder.buildRestaurant();
         assertNotNull(service.create(restaurant).getId());
     }
 
     @Test
+    @DisplayName("update(): корректные данные -> успешное обновление")
     void update() {
         var restaurant = dataBuilder.saveRestaurant();
         var newName = RandomStringUtils.secure().nextAlphanumeric(16);
@@ -34,12 +37,14 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getById(): существующий id -> успешное получение ресторана")
     void get() {
         var restaurant = dataBuilder.saveRestaurant();
         assertDoesNotThrow(() -> service.getById(restaurant.getId()));
     }
 
     @Test
+    @DisplayName("getByDishId(): существующий dishId -> успешное получение ресторана")
     void getByDishId() {
         var restaurant = dataBuilder.saveRestaurant();
         var dish = dataBuilder.saveDish(restaurant);
@@ -47,6 +52,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getChosen(): один ресторан с голосами сегодня -> возвращает его")
     void getChosen() {
         dataBuilder.clearVotes();
         var restaurant = dataBuilder.saveRestaurant();
@@ -55,6 +61,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getChosen(): больше голосов вчера, один сегодня -> ресторан с голосами сегодня")
     void getChosenReturnsRestaurantWithMostVotesToday() {
         dataBuilder.clearVotes();
         var yesterdayLeader = dataBuilder.saveRestaurant();
@@ -70,6 +77,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getChosen(): разное число голосов сегодня -> ресторан с максимумом")
     void getChosenReturnsRestaurantWithHigherTodayVoteCount() {
         dataBuilder.clearVotes();
         var fewerVotesToday = dataBuilder.saveRestaurant();
@@ -85,6 +93,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getChosen(): голоса только за вчера -> NoSuchElementException")
     void getChosenFailsWhenNoVotesToday() {
         dataBuilder.clearVotes();
         var restaurant = dataBuilder.saveRestaurant();
@@ -94,6 +103,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getChosen(): голосов нет -> NoSuchElementException")
     void getChosenFailsWhenNoVotesAtAll() {
         dataBuilder.clearVotes();
         dataBuilder.saveRestaurant();
@@ -102,6 +112,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getAll(): рестораны в БД -> непустая страница")
     void getAll() {
         dataBuilder.saveRestaurant();
         var pageable = PageRequest.of(0, 20, Sort.by(new Sort.Order(Sort.Direction.ASC, "id")));
@@ -109,6 +120,7 @@ class RestaurantServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("delete(): существующий id -> ресторан удалён")
     void delete() {
         var restaurant = dataBuilder.saveRestaurant();
         service.delete(restaurant.getId());

@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ class UserControllerTest extends AbstractControllerTest {
     private UserService userService;
 
     @Test
+    @DisplayName("create(): валидный запрос -> успешное создание пользователя")
     void create() throws Exception {
         var request = new UserCreateRequest(
                 RandomStringUtils.secure().nextAlphanumeric(16),
@@ -41,6 +43,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): невалидный запрос -> 400 Bad Request")
     void createFailsWhenRequestInvalid() throws Exception {
         var request = new UserCreateRequest("ab", "1");
 
@@ -55,6 +58,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): занятый username -> 400 Bad Request")
     void createFailsWhenUsernameTaken() throws Exception {
         var existing = dataBuilder.saveUser();
         var request = new UserCreateRequest(existing.getUsername(), RandomStringUtils.secure().nextAlphanumeric(16));
@@ -70,6 +74,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): корректные данные -> успешное обновление")
     void update() throws Exception {
         var user = userService.create(dataBuilder.buildUser());
         var request = new UserUpdateRequest(
@@ -96,6 +101,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): несуществующий пользователь -> 404 Not Found")
     void updateFailsWhenUserNotFound() throws Exception {
         var request = new UserUpdateRequest(
                 Long.MAX_VALUE,
@@ -115,6 +121,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение пользователя")
     void getById() throws Exception {
         var user = dataBuilder.saveUser();
 
@@ -127,6 +134,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): несуществующий id -> 404 Not Found")
     void getByIdFailsWhenNotFound() throws Exception {
         mockMvc.perform(get("/users/{id}", Long.MAX_VALUE).with(user()))
                 .andDo(print())
@@ -135,6 +143,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): фильтр по username -> страница с пользователем")
     void getAll() throws Exception {
         var user = dataBuilder.saveUser();
 
@@ -153,6 +162,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): фильтр без совпадений -> пустая страница")
     void getAllReturnsEmptyWhenFilterDoesNotMatch() throws Exception {
         dataBuilder.saveUser();
 
@@ -170,6 +180,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("delete(): существующий id -> пользователь удалён")
     void deleteById() throws Exception {
         var user = dataBuilder.saveUser();
 

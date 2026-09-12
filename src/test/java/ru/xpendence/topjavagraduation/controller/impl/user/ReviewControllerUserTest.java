@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl.user;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
@@ -28,6 +29,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): валидный запрос -> успешное создание отзыва")
     void create() throws Exception {
         mockMvc.perform(
                         post("/user/reviews")
@@ -47,6 +49,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): владелец отзыва -> успешное обновление")
     void update() throws Exception {
         var review = dataBuilder.saveReview(reviewer, restaurant, 3, "Средне");
         mockMvc.perform(
@@ -63,6 +66,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): чужой пользователь -> 400 Bad Request")
     void updateFailsWhenReviewBelongsToAnotherUser() throws Exception {
         var review = dataBuilder.saveReview(reviewer, restaurant, 3, "Средне");
         var anotherUser = dataBuilder.saveUser();
@@ -80,6 +84,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение отзыва")
     void getById() throws Exception {
         var review = dataBuilder.saveReview(reviewer, restaurant);
         mockMvc.perform(
@@ -93,6 +98,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getByUserIdAndRestaurantId(): отзыв есть -> успешное получение")
     void getByUserIdAndRestaurantId() throws Exception {
         var review = dataBuilder.saveReview(reviewer, restaurant);
         mockMvc.perform(
@@ -106,6 +112,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAllByRestaurantId(): отзывы есть -> непустая страница")
     void getAllByRestaurantId() throws Exception {
         dataBuilder.saveReview(reviewer, restaurant);
         mockMvc.perform(
@@ -119,6 +126,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): невалидный rating -> 400 Bad Request")
     void createThrowsMethodArgumentNotValidException() throws Exception {
         mockMvc.perform(
                         post("/user/reviews")
@@ -134,6 +142,7 @@ class ReviewControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): анонимный запрос -> 401 Unauthorized")
     void createReturnsUnauthorizedWhenAnonymous() throws Exception {
         mockMvc.perform(
                         post("/user/reviews")

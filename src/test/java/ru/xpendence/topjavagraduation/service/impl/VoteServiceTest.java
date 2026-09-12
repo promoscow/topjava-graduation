@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.xpendence.topjavagraduation.AbstractTest;
@@ -12,10 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class VoteServiceTest extends AbstractTest {
 
@@ -34,6 +32,7 @@ class VoteServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("create(): до 11:00 -> успешное создание; после 11:00 -> IllegalArgumentException")
     void create() {
         var vote = dataBuilder.buildVote(user, restaurant);
         var now = LocalTime.now();
@@ -45,6 +44,7 @@ class VoteServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("update(): смена ресторана -> успешное обновление")
     void update() {
         var vote = dataBuilder.saveVote(user, restaurant);
         var newRestaurant = dataBuilder.saveRestaurant();
@@ -54,18 +54,21 @@ class VoteServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getById(): существующий id -> успешное получение голоса")
     void getById() {
         var vote = dataBuilder.saveVote(user, restaurant);
         assertDoesNotThrow(() -> service.getById(vote.getId()));
     }
 
     @Test
+    @DisplayName("getByUserId(): голос на сегодня -> успешное получение")
     void getByUserId() {
         var vote = dataBuilder.saveVote(user, restaurant);
         assertEquals(vote.getId(), service.getByUserId(vote.getUser().getId(), LocalDate.now()).getId());
     }
 
     @Test
+    @DisplayName("getByUserId(): несколько дат -> голос за указанную дату")
     void getByUserIdReturnsVoteForSpecifiedDateWhenUserHasMultipleVotes() {
         var yesterday = LocalDate.now().minusDays(1);
         var todayVote = dataBuilder.saveVote(user, restaurant, LocalDate.now());
@@ -76,6 +79,7 @@ class VoteServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getByUserId(): нет голоса на дату -> NoSuchElementException")
     void getByUserIdThrowsWhenVoteForDateNotFound() {
         dataBuilder.saveVote(user, restaurant, LocalDate.now());
         assertThrows(

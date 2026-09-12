@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl.user;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
@@ -21,6 +22,7 @@ class DishControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): активное блюдо -> успешное получение")
     void getById() throws Exception {
         var dish = dataBuilder.saveDish(restaurant, true);
         mockMvc.perform(
@@ -34,6 +36,7 @@ class DishControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): неактивное блюдо -> 404 Not Found")
     void getByIdFailsWhenInactive() throws Exception {
         var dish = dataBuilder.saveDish(restaurant, false);
         mockMvc.perform(
@@ -46,6 +49,7 @@ class DishControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAllByRestaurantId(): есть активные и неактивные -> только активные")
     void getAllByRestaurantIdReturnsOnlyActive() throws Exception {
         var active = dataBuilder.saveDish(restaurant, true);
         dataBuilder.saveDish(restaurant, false);

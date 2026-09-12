@@ -14,3 +14,4 @@ alwaysApply: false
 - Auth в MockMvc: `.with(jwtUser(user, "USER"))` / `.with(user())` / `.with(admin())` из `JwtUserRequestPostProcessors` (authorities `"USER"` / `"ADMIN"`, не `ROLE_*`). Публичные `POST /login`, `POST /users` — без auth.
 - MockMvc: `perform` → `.andDo(print())` → `status()` / `jsonPath`. Create: `isOk` + `$.id`. Update: PUT, затем GET. Delete: DELETE, затем GET → `isNotFound`. Валидация/бизнес-ошибка: `isBadRequest`. Без auth → `isUnauthorized`; неверная роль → `isForbidden`.
 - Фикстуры — через `dataBuilder` или сервис, не SQL вручную.
+- На каждый `@Test` — `@DisplayName` в формате `"<вызываемый метод>: <поведение> -> <ожидаемый результат>"`. Пример: `"getUser(): корректный id -> успешное получение пользователя"`.

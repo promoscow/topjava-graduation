@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl.admin;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
 import ru.xpendence.topjavagraduation.entity.Restaurant;
@@ -25,6 +26,7 @@ class ReviewControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение отзыва")
     void getById() throws Exception {
         var review = dataBuilder.saveReview(user, restaurant);
         mockMvc.perform(get("/admin/reviews/{id}", review.getId()).with(admin()))
@@ -35,6 +37,7 @@ class ReviewControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAllByRestaurantId(): отзывы есть -> непустая страница")
     void getAllByRestaurantId() throws Exception {
         dataBuilder.saveReview(user, restaurant);
         mockMvc.perform(get("/admin/reviews/restaurant/{restaurantId}", restaurant.getId()).with(admin()))
@@ -45,6 +48,7 @@ class ReviewControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("delete(): существующий id -> отзыв удалён")
     void deleteReview() throws Exception {
         var review = dataBuilder.saveReview(user, restaurant);
         mockMvc.perform(delete("/admin/reviews/{id}", review.getId()).with(admin()))

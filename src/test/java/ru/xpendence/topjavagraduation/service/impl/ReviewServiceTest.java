@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,12 +29,14 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("create(): валидный отзыв -> успешное создание")
     void create() {
         var review = dataBuilder.buildReview(user, restaurant, 4, "Хороший обед");
         assertNotNull(service.create(review).getId());
     }
 
     @Test
+    @DisplayName("create(): отзыв user+restaurant уже есть -> IllegalArgumentException")
     void createThrowsWhenReviewAlreadyExists() {
         dataBuilder.saveReview(user, restaurant);
         var duplicate = dataBuilder.buildReview(user, restaurant, 3, "Ещё один отзыв");
@@ -41,6 +44,7 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("update(): владелец отзыва -> успешное обновление")
     void update() {
         var review = dataBuilder.saveReview(user, restaurant, 2, "Так себе");
         review.setRating(5);
@@ -52,6 +56,7 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("update(): чужой пользователь -> IllegalArgumentException")
     void updateFailsWhenReviewBelongsToAnotherUser() {
         var review = dataBuilder.saveReview(user, restaurant, 2, "Так себе");
         var anotherUser = dataBuilder.saveUser();
@@ -60,12 +65,14 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getById(): существующий id -> успешное получение отзыва")
     void getById() {
         var review = dataBuilder.saveReview(user, restaurant);
         assertDoesNotThrow(() -> service.getById(review.getId()));
     }
 
     @Test
+    @DisplayName("getByUserIdAndRestaurantId(): отзыв есть -> успешное получение")
     void getByUserIdAndRestaurantId() {
         var review = dataBuilder.saveReview(user, restaurant);
         assertEquals(
@@ -75,6 +82,7 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getAllByRestaurantId(): отзывы есть -> непустая страница")
     void getAllByRestaurantId() {
         dataBuilder.saveReview(user, restaurant);
         var pageable = PageRequest.of(0, 10);
@@ -82,6 +90,7 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getAverageRatingByRestaurantId(): несколько отзывов -> средний рейтинг")
     void getAverageRatingByRestaurantId() {
         dataBuilder.saveReview(user, restaurant, 4, "Норм");
         var anotherUser = dataBuilder.saveUser();
@@ -90,12 +99,14 @@ class ReviewServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("countByRestaurantId(): один отзыв -> 1")
     void countByRestaurantId() {
         dataBuilder.saveReview(user, restaurant);
         assertEquals(1, service.countByRestaurantId(restaurant.getId()));
     }
 
     @Test
+    @DisplayName("delete(): существующий id -> отзыв удалён")
     void delete() {
         var review = dataBuilder.saveReview(user, restaurant);
         service.delete(review.getId());

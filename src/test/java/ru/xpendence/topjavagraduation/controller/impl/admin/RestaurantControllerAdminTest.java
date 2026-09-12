@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl.admin;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
@@ -16,6 +17,7 @@ import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProces
 class RestaurantControllerAdminTest extends AbstractControllerTest {
 
     @Test
+    @DisplayName("create(): валидный запрос -> успешное создание ресторана")
     void create() throws Exception {
         var restaurant = dataBuilder.buildRestaurant();
         mockMvc.perform(
@@ -31,6 +33,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): корректные данные -> успешное обновление")
     void update() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
         var name = RandomStringUtils.secure().nextAlphanumeric(16);
@@ -47,6 +50,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение ресторана")
     void getById() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
         mockMvc.perform(
@@ -60,6 +64,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): рестораны в БД -> непустая страница")
     void getAll() throws Exception {
         dataBuilder.saveRestaurant();
         mockMvc.perform(

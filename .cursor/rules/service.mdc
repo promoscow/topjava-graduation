@@ -14,11 +14,22 @@ alwaysApply: false
 - `@Transactional` на изменяющих методах; чтение — `@Transactional(readOnly = true)`. Не на контроллере.
 - Update: `id == null` → `IllegalArgumentException` → `findById` stored → `Entity.enrichForUpdate(incoming, stored)` → `save(stored)`.
 - Поиск: `orElseThrow` с `NoSuchElementException` и `String.format`, текст на английском: `"Tag not found by id: %d"`. Инварианты (занятое имя, бизнес-правило) — `IllegalArgumentException`.
+- **Javadoc** — на интерфейсе `{Entity}Service` (не на `*Impl`): краткое описание класса и каждого метода на русском; `@param` / `@return` / `@throws` по фактическому поведению. Эталон — `DishService`.
 
 ```java
+// GOOD — Javadoc на интерфейсе
+/**
+ * Возвращает тег по идентификатору.
+ *
+ * @param id идентификатор тега
+ * @return найденный тег
+ * @throws java.util.NoSuchElementException если тег не найден
+ */
+Tag getById(Long id);
+
 // GOOD
 return repository.findById(id)
     .orElseThrow(() -> new NoSuchElementException(String.format("Tag not found by id: %d", id)));
 
-// BAD — чужой репозиторий, Optional из сервиса, DTO в сигнатуре
+// BAD — чужой репозиторий, Optional из сервиса, DTO в сигнатуре, Javadoc только на Impl
 ```

@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,12 +14,7 @@ import ru.xpendence.topjavagraduation.service.UserService;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest extends AbstractTest {
 
@@ -32,6 +28,7 @@ class UserServiceTest extends AbstractTest {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Test
+    @DisplayName("create(): валидный пользователь -> успешное создание с ролью USER")
     void create() {
         var user = dataBuilder.buildUser();
         var rawPassword = user.getPassword();
@@ -44,6 +41,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("create(): занятый username -> IllegalArgumentException")
     void createFailsWhenUsernameTaken() {
         var existing = dataBuilder.saveUser();
         var user = dataBuilder.buildUser();
@@ -53,6 +51,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("update(): корректные данные -> успешное обновление")
     void update() {
         var user = service.create(dataBuilder.buildUser());
         var username = RandomStringUtils.secure().nextAlphanumeric(16);
@@ -69,6 +68,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("update(): id == null -> IllegalArgumentException")
     void updateFailsWhenIdIsNull() {
         var user = dataBuilder.buildUser();
 
@@ -76,28 +76,33 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getById(): существующий id -> успешное получение пользователя")
     void get() {
         var user = dataBuilder.saveUser();
         assertDoesNotThrow(() -> service.getById(user.getId()));
     }
 
     @Test
+    @DisplayName("getById(): несуществующий id -> NoSuchElementException")
     void getFailsWhenNotFound() {
         assertThrows(NoSuchElementException.class, () -> service.getById(Long.MAX_VALUE));
     }
 
     @Test
+    @DisplayName("getByUsername(): существующий username -> успешное получение пользователя")
     void getByUsername() {
         var user = dataBuilder.saveUser();
         assertDoesNotThrow(() -> service.getByUsername(user.getUsername()));
     }
 
     @Test
+    @DisplayName("getByUsername(): несуществующий username -> NoSuchElementException")
     void getByUsernameFailsWhenNotFound() {
         assertThrows(NoSuchElementException.class, () -> service.getByUsername("missing-user"));
     }
 
     @Test
+    @DisplayName("getAll(): фильтр по username -> страница с пользователем")
     void getAll() {
         var user = dataBuilder.saveUser();
         var page = service.getAll(user.getUsername().substring(0, 4), PageRequest.of(0, 20));
@@ -107,6 +112,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getAll(): без фильтра -> непустая страница")
     void getAllWithoutFilter() {
         dataBuilder.saveUser();
         var page = service.getAll(null, PageRequest.of(0, 20));
@@ -115,6 +121,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("getAll(): фильтр без совпадений -> пустая страница")
     void getAllReturnsEmptyWhenFilterDoesNotMatch() {
         dataBuilder.saveUser();
         var page = service.getAll("zzz-no-match-zzz", PageRequest.of(0, 20));
@@ -123,6 +130,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("addRole(): существующие user и role -> роль добавлена")
     void addRole() {
         var user = dataBuilder.saveUser();
         service.addRole(user.getId(), 2L);
@@ -135,6 +143,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("removeRole(): пользователь с ролью -> роль удалена")
     void removeRole() {
         var user = dataBuilder.saveUser();
         service.removeRole(user.getId(), 2L);
@@ -147,6 +156,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("delete(): существующий id -> пользователь удалён")
     void delete() {
         var user = dataBuilder.saveUser();
         service.delete(user.getId());

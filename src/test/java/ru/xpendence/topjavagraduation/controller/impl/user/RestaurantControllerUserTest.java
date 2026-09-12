@@ -1,5 +1,6 @@
 package ru.xpendence.topjavagraduation.controller.impl.user;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
 
@@ -14,6 +15,7 @@ import static ru.xpendence.topjavagraduation.controller.JwtUserRequestPostProces
 class RestaurantControllerUserTest extends AbstractControllerTest {
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение ресторана")
     void getById() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
         mockMvc.perform(
@@ -27,6 +29,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): есть активные и неактивные блюда -> только активные в ответе")
     void getByIdReturnsOnlyActiveDishes() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
         var active = dataBuilder.saveDish(restaurant, true);
@@ -43,6 +46,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getChosen(): один ресторан с голосами сегодня -> возвращает его")
     void getChosen() throws Exception {
         dataBuilder.clearVotes();
         var restaurant = dataBuilder.saveRestaurant();
@@ -55,6 +59,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getChosen(): больше голосов вчера, один сегодня -> ресторан с голосами сегодня")
     void getChosenReturnsRestaurantWithMostVotesToday() throws Exception {
         dataBuilder.clearVotes();
         var yesterdayLeader = dataBuilder.saveRestaurant();
@@ -74,6 +79,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getChosen(): разное число голосов сегодня -> ресторан с максимумом")
     void getChosenReturnsRestaurantWithHigherTodayVoteCount() throws Exception {
         dataBuilder.clearVotes();
         var fewerVotesToday = dataBuilder.saveRestaurant();
@@ -93,6 +99,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getChosen(): голоса только за вчера -> 404 Not Found")
     void getChosenReturnsNotFoundWhenNoVotesToday() throws Exception {
         dataBuilder.clearVotes();
         var restaurant = dataBuilder.saveRestaurant();
@@ -105,6 +112,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getChosen(): голосов нет -> 404 Not Found")
     void getChosenReturnsNotFoundWhenNoVotesAtAll() throws Exception {
         dataBuilder.clearVotes();
         dataBuilder.saveRestaurant();
@@ -116,6 +124,7 @@ class RestaurantControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): рестораны в БД -> непустая страница")
     void getAll() throws Exception {
         dataBuilder.saveRestaurant();
         mockMvc.perform(

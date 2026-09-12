@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ class TagControllerTest extends AbstractControllerTest {
     private TagService tagService;
 
     @Test
+    @DisplayName("create(): валидный запрос -> успешное создание тега")
     void create() throws Exception {
         var request = new TagCreateRequest(RandomStringUtils.secure().nextAlphanumeric(16));
 
@@ -38,6 +40,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): невалидный запрос -> 400 Bad Request")
     void createFailsWhenRequestInvalid() throws Exception {
         var request = new TagCreateRequest("");
 
@@ -53,6 +56,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("create(): занятое имя -> 400 Bad Request")
     void createFailsWhenNameTaken() throws Exception {
         var existing = dataBuilder.saveTag();
         var request = new TagCreateRequest(existing.getName());
@@ -69,6 +73,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): корректные данные -> успешное обновление")
     void update() throws Exception {
         var tag = tagService.create(dataBuilder.buildTag());
         var request = new TagUpdateRequest(
@@ -94,6 +99,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("update(): несуществующий тег -> 404 Not Found")
     void updateFailsWhenTagNotFound() throws Exception {
         var request = new TagUpdateRequest(
                 Long.MAX_VALUE,
@@ -112,6 +118,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): существующий id -> успешное получение тега")
     void getById() throws Exception {
         var tag = dataBuilder.saveTag();
 
@@ -124,6 +131,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("get(): несуществующий id -> 404 Not Found")
     void getByIdFailsWhenNotFound() throws Exception {
         mockMvc.perform(get("/tags/{id}", Long.MAX_VALUE).with(user()))
                 .andDo(print())
@@ -132,6 +140,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): фильтр по имени -> страница с тегом")
     void getAll() throws Exception {
         var tag = dataBuilder.saveTag();
 
@@ -150,6 +159,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): фильтр без совпадений -> пустая страница")
     void getAllReturnsEmptyWhenFilterDoesNotMatch() throws Exception {
         dataBuilder.saveTag();
 
@@ -167,6 +177,7 @@ class TagControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("delete(): существующий id -> тег удалён")
     void deleteById() throws Exception {
         var tag = dataBuilder.saveTag();
 

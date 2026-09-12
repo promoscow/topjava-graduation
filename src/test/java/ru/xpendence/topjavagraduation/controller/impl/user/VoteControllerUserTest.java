@@ -1,6 +1,7 @@
 package ru.xpendence.topjavagraduation.controller.impl.user;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.xpendence.topjavagraduation.controller.AbstractControllerTest;
@@ -33,6 +34,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("vote(): до 11:00 -> успешное голосование; после 11:00 -> 400 Bad Request")
     void vote() throws Exception {
         if (LocalTime.now().isBefore(VOTING_AVAILABLE_UNTIL)) {
             mockMvc.perform(
@@ -60,6 +62,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getByUserId(): голос на сегодня -> успешное получение")
     void getByUserId() throws Exception {
         var vote = dataBuilder.saveVote(voter, restaurant);
         mockMvc.perform(
@@ -73,6 +76,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getByUserId(): дата не указана -> голос за сегодня")
     void getByUserIdUsesTodayWhenDateNotProvided() throws Exception {
         var yesterday = LocalDate.now().minusDays(1);
         dataBuilder.saveVote(voter, restaurant, yesterday);
@@ -90,6 +94,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getByUserId(): указана дата -> голос за эту дату")
     void getByUserIdReturnsVoteForSpecifiedDate() throws Exception {
         var yesterday = LocalDate.now().minusDays(1);
         var yesterdayVote = dataBuilder.saveVote(voter, restaurant, yesterday);
@@ -108,6 +113,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("vote(): невалидный запрос -> 400 Bad Request")
     void voteThrowsMethodArgumentNotValidException() throws Exception {
         mockMvc.perform(
                         post("/user/votes")
@@ -121,6 +127,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("vote(): анонимный запрос -> 401 Unauthorized")
     void voteReturnsUnauthorizedWhenAnonymous() throws Exception {
         mockMvc.perform(
                         post("/user/votes")
@@ -133,6 +140,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("vote(): ADMIN без USER -> 403 Forbidden")
     void voteReturnsForbiddenWhenAdminWithoutUserAuthority() throws Exception {
         mockMvc.perform(
                         post("/user/votes")
@@ -146,6 +154,7 @@ class VoteControllerUserTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("getAll(): USER на admin-эндпоинт -> 403 Forbidden")
     void adminEndpointReturnsForbiddenForUser() throws Exception {
         mockMvc.perform(
                         get("/admin/restaurants/all")
