@@ -15,4 +15,4 @@ values (1, 'Суп дня', 300.00, false, 1),
        (14, 'Котлеты Веганские', 195.00, false, 3),
        (15, 'Сюрприз от Шефа', 240.00, false, 3);
 
-alter sequence dishes_seq restart with 16;
+alter table dishes alter column id restart with 16;

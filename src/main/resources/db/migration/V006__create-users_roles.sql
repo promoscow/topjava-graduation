@@ -1,5 +1,5 @@
 create table users_roles
 (
-    user_id long references users (id),
-    role_id long references roles (id)
+    user_id bigint references users (id),
+    role_id bigint references roles (id)
 );

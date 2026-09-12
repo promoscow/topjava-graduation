@@ -3,4 +3,4 @@ values (1, 'Три поросёнка'),
        (2, 'Большая ложка'),
        (3, 'Сытый гусь');
 
-alter sequence restaurants_seq restart with 4;
+alter table restaurants alter column id restart with 4;

@@ -5,4 +5,4 @@ values (1, 'admin', '$2a$10$cwJeYeeNKCylkRabGeWkPeYXxle.U0hjk4EOtIzp25PL.ZKESEb8
        (4, 'veryBestEmployee777', '$2a$10$1OUrBITwsT32lw061W0G0edVtn.Q66X2KiKIyFa9kYLtBry8KSsSC'), -- aqswde
        (5, 'pooh', '$2a$10$rMV7CEDtJbZXBrm.To83Vu5.FIGfi0zbAmdodhbAs.To3wLhkGUBS'); -- 12345
 
-alter sequence users_seq restart with 6;
+alter table users alter column id restart with 6;

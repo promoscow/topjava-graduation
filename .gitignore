@@ -22,3 +22,7 @@ bin/
 # Contains a machine-specific JDK path
 gradle.properties
 local/
+
+### Cursor hooks ###
+.cursor/hooks/state/
+.cursor/skip-test-loop

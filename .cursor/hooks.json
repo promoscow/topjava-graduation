@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/mark-code-edit.sh"
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/run-tests-on-stop.sh",
+        "timeout": 900,
+        "loop_limit": 3
+      }
+    ]
+  }
+}

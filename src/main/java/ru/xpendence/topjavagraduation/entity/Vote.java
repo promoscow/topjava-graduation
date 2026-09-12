@@ -1,22 +1,19 @@
 package ru.xpendence.topjavagraduation.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "votes")
+@Table(
+        name = "votes",
+        uniqueConstraints = @UniqueConstraint(
+                name = "ux_date_user",
+                columnNames = {"date", "user_id"}
+        )
+)
 @Getter
 @Setter
 public class Vote {
@@ -25,7 +22,7 @@ public class Vote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
