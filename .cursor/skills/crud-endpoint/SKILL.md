@@ -11,9 +11,9 @@ description: Используй, когда нужно добавить REST CRU
 - Нужен стандартный набор слоёв по нашему паттерну.
 
 ## Что делает (процедура)
-1. Entity: `@Getter`/`@Setter`, `@Entity`, Hibernate.
+1. Entity: Kotlin `data class`, `@Entity`, Hibernate.
 2. Service: бизнес-логика (поведение сущности), `@Transactional` только там, где это необходимо.
-3. Repository: интерфейс `JpaRepository`, только методы для обслуживания методов сервиса.
+3. Repository: интерфейс + `*RepositoryJdbc` (`NamedParameterJdbcTemplate`), только методы для обслуживания методов сервиса.
 4. DTO: в пакете controller/model. Валидация и описание через jakarta. Для запросов -Request в пакете /request, для ответов Response в пакете /response.
 5. Mapper: в пакете controller/mapper. Статические методы.
 6. Controller: тонкий, бизнес-логика исключена. Принимает запрос, мапит в сущность (при необходимости), передаёт в сервис, получает ответ, мапит в ответ, возвращает.
@@ -27,7 +27,7 @@ description: Используй, когда нужно добавить REST CRU
 - Service работает только с entity.
 - Service работает с Repository своей сущности, c другими сущностями работает только через сервисы этих сущностей.
 - Mapper не должен быть бином Spring. Static, как `TagModelMapper`.
-- Entity: `@Getter`/`@Setter`, не `@Data`.
+- Entity: Kotlin `data class` с `val`, non-null по схеме Flyway; `enrichForUpdate` → `copy`.
 - Классы должны быть в едином стиле с классами в своих пакетах.
 - Rules (`.cursor/rules`) важнее пунктов этого скилла, если они расходятся.
 

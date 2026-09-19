@@ -13,15 +13,12 @@ import java.time.LocalDate;
 public class VoteMapper {
 
     public Vote toVote(VoteRequest request, Long userId) {
-        var vote = new Vote();
-        vote.setDate(LocalDate.now());
-        var user = new User();
-        user.setId(userId);
-        vote.setUser(user);
-        var restaurant = new Restaurant();
-        restaurant.setId(request.restaurantId());
-        vote.setRestaurant(restaurant);
-        return vote;
+        return new Vote(
+                null,
+                LocalDate.now(),
+                new User(userId, "", ""),
+                new Restaurant(request.restaurantId(), null)
+        );
     }
 
     public VoteResponse toResponse(Vote vote) {

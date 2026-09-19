@@ -27,8 +27,8 @@ description: >-
 - Сервис инжектит чужой `*Repository` вместо чужого `*Service`.
 - Mapper — Spring-бин и/или вызывает сервис (не повторять `RestaurantModelMapper` → `ReviewService`).
 - Mapper не static / не в пакете `controller.mapper` при новом коде.
-- Entity: `@Data` вместо `@Getter`/`@Setter`; eager `ManyToOne` без причины.
-- Репозиторий: методы «на будущее», `Page` + `JOIN FETCH` без `countQuery`.
+- Entity: не Kotlin `data class`, или ассоциации/коллекции в primary constructor; eager `ManyToOne` без причины.
+- Репозиторий: `JpaRepository` / методы «на будущее»; `Page` без отдельного `COUNT`.
 - Тесты: `@WebMvcTest`, Mockito, моки слоёв, SQL-фикстуры вместо `DataBuilder`.
 - Ошибки: свои exception-классы; not found не `NoSuchElementException`; инвариант не `IllegalArgumentException`.
 - Инъекция: `@Autowired` на поле, Lombok `@RequiredArgsConstructor` в проде.

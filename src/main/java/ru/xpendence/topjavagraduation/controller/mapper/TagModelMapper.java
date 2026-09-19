@@ -11,16 +11,11 @@ public final class TagModelMapper {
     }
 
     public static Tag toTag(TagCreateRequest request) {
-        var tag = new Tag();
-        tag.setName(request.name());
-        return tag;
+        return new Tag(null, request.name());
     }
 
     public static Tag toTag(TagUpdateRequest request) {
-        var tag = new Tag();
-        tag.setId(request.id());
-        tag.setName(request.name());
-        return tag;
+        return new Tag(request.id(), request.name());
     }
 
     public static TagResponse toResponse(Tag tag) {

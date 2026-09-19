@@ -68,9 +68,7 @@ class DishControllerAdminTest extends AbstractControllerTest {
     @Test
     @DisplayName("resetMenu(): активные блюда ресторана -> становятся неактивными")
     void resetMenu() throws Exception {
-        var dish = dataBuilder.saveDish(restaurant);
-        dish.setActive(true);
-        service.update(dish);
+        var dish = dataBuilder.saveDish(restaurant, true);
         mockMvc.perform(
                 put("/admin/dishes/reset/restaurant/{restaurantId}", restaurant.getId())
         .with(admin())

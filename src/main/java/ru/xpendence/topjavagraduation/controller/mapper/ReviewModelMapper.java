@@ -14,25 +14,25 @@ import java.time.LocalDate;
 public class ReviewModelMapper {
 
     public Review toReview(ReviewCreateRequest request, Long userId) {
-        var review = new Review();
-        review.setRating(request.rating());
-        review.setText(request.text());
-        review.setDate(LocalDate.now());
-        var user = new User();
-        user.setId(userId);
-        review.setUser(user);
-        var restaurant = new Restaurant();
-        restaurant.setId(request.restaurantId());
-        review.setRestaurant(restaurant);
-        return review;
+        return new Review(
+                null,
+                request.rating(),
+                request.text(),
+                LocalDate.now(),
+                new User(userId, "", ""),
+                new Restaurant(request.restaurantId(), null)
+        );
     }
 
     public Review toReview(ReviewUpdateRequest request) {
-        var review = new Review();
-        review.setId(request.id());
-        review.setRating(request.rating());
-        review.setText(request.text());
-        return review;
+        return new Review(
+                request.id(),
+                request.rating(),
+                request.text(),
+                LocalDate.now(),
+                new User(null, "", ""),
+                new Restaurant()
+        );
     }
 
     public ReviewResponse toResponse(Review review) {

@@ -26,16 +26,11 @@ public class RestaurantModelMapper {
     }
 
     public Restaurant toRestaurantForCreate(RestaurantRequest request) {
-        var restaurant = new Restaurant();
-        restaurant.setName(request.name());
-        return restaurant;
+        return new Restaurant(null, request.name());
     }
 
     public Restaurant toRestaurantForUpdate(RestaurantRequest request) {
-        var restaurant = new Restaurant();
-        restaurant.setId(request.id());
-        restaurant.setName(request.name());
-        return restaurant;
+        return new Restaurant(request.id(), request.name());
     }
 
     public RestaurantResponse toResponse(Restaurant restaurant) {

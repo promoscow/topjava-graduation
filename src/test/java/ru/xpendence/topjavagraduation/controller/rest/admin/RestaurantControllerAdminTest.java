@@ -37,7 +37,7 @@ class RestaurantControllerAdminTest extends AbstractControllerTest {
     void update() throws Exception {
         var restaurant = dataBuilder.saveRestaurant();
         var name = RandomStringUtils.secure().nextAlphanumeric(16);
-        restaurant.setName(name);
+        restaurant = restaurant.copy(restaurant.getId(), name);
         mockMvc.perform(
                 put("/admin/restaurants")
                         .with(admin())

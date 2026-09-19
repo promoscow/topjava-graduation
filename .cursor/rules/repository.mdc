@@ -1,28 +1,30 @@
 ---
-description: Spring Data-репозитории — только методы под сервис
-globs: **/repository/**/*.java
+description: JDBC-репозитории — только методы под сервис
+globs: **/repository/**/*
 alwaysApply: false
 ---
 
 # Репозиторий
 
-Только интерфейс `JpaRepository<{Entity}, Long>`. Имя `{Entity}Repository`. Реализаций и `@Repository` на классе нет.
+Интерфейс `{Entity}Repository` в `repository` + реализация `{Entity}RepositoryJdbc` в `repository.jdbc` с `@Repository` и `NamedParameterJdbcTemplate`.
 
 - Методы — **ровно** под нужды своего сервиса, не «на будущее».
-- Derived: `findBy*`, `existsBy*`, `countBy*` → `Optional` / `boolean` / `long` / `Page`.
-- Кастомный JPQL — `@Query`. Для ответа с ассоциациями — `JOIN FETCH` (`findByIdWithDetails`, `findByIdWithRestaurant`). У `Page` с fetch — отдельный `countQuery`.
-- Массовый UPDATE/DELETE — `@Modifying` + `@Query`; `@Transactional` на таком методе, если его нет на сервисе.
-- Параметры именовать `@Param`, не полагаться на `?1` в новом коде.
+- Чтение с ассоциациями — JOIN / отдельные запросы в JDBC (аналог бывшего `JOIN FETCH`).
+- У `Page` — отдельный `COUNT` + `LIMIT`/`OFFSET` из `Pageable`; ответ `PageImpl`.
+- Массовый UPDATE/DELETE — SQL в репозитории; транзакция на сервисе.
+- `java.util.Optional` в сигнатурах для Java-сервисов.
 
-```java
+```kotlin
 // GOOD
-public interface TagRepository extends JpaRepository<Tag, Long> {
-    boolean existsByName(String name);
-    Page<Tag> findByNameContainingIgnoreCase(String name, Pageable pageable);
+interface TagRepository {
+    fun existsByName(name: String): Boolean
+    fun findByNameContainingIgnoreCase(name: String, pageable: Pageable): Page<Tag>
 }
 
-@Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = :id")
-Optional<Dish> findByIdWithRestaurant(@Param("id") Long id);
+@Repository
+class TagRepositoryJdbc(
+    private val jdbc: NamedParameterJdbcTemplate,
+) : TagRepository { ... }
 
-// BAD — класс-реализация, методы «на всякий случай», fetch без countQuery у Page
+// BAD — JpaRepository, методы «на всякий случай», Page без count
 ```

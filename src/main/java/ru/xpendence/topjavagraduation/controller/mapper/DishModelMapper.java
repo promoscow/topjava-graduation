@@ -17,22 +17,22 @@ public class DishModelMapper {
     }
 
     public Dish toDish(DishCreateRequest request) {
-        var dish = new Dish();
-        dish.setPrice(request.price());
-        dish.setName(request.name());
-        dish.setActive(request.active());
-        var restaurant = new Restaurant();
-        restaurant.setId(request.restaurantId());
-        dish.setRestaurant(restaurant);
-        return dish;
+        return new Dish(
+                null,
+                request.name(),
+                request.price(),
+                request.active(),
+                new Restaurant(request.restaurantId(), null)
+        );
     }
 
     public Dish toDish(DishUpdateRequest request) {
-        var dish = new Dish();
-        dish.setId(request.id());
-        dish.setPrice(request.price());
-        dish.setName(request.name());
-        dish.setActive(request.active());
-        return dish;
+        return new Dish(
+                request.id(),
+                request.name(),
+                request.price(),
+                request.active(),
+                new Restaurant()
+        );
     }
 }

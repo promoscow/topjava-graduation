@@ -33,9 +33,6 @@ public final class JwtUserRequestPostProcessors {
     }
 
     private static User stubUser(Long id) {
-        var user = new User();
-        user.setId(id);
-        user.setUsername("test-user-" + id);
-        return user;
+        return new User(id, "test-user-" + id, "");
     }
 }

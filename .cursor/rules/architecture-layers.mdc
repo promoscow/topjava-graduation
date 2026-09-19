@@ -11,4 +11,4 @@ alwaysApply: true
 - Сервис принимает и возвращает entity, не DTO. Свой репозиторий; чужие сущности — через их `*Service`.
 - Mapper (пакет `controller`) — граница web/domain. DTO не покидают web-слой.
 - Детали слоя — в правилах `controller`, `service`, `repository` (по globs пакетов).
-- Entity: JPA + `@Getter`/`@Setter`, `IDENTITY`, `enrichForUpdate`. `ManyToOne` обычно `LAZY`.
+- Entity: Kotlin `data class` с `val`; non-null по схеме Flyway (`NOT NULL`). Ассоциации/коллекции — в primary constructor или `val`-коллекции в теле. `enrichForUpdate` возвращает `copy`.

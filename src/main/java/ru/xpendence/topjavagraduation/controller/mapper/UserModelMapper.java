@@ -11,18 +11,11 @@ public final class UserModelMapper {
     }
 
     public static User toUser(UserCreateRequest request) {
-        var user = new User();
-        user.setUsername(request.username());
-        user.setPassword(request.password());
-        return user;
+        return new User(null, request.username(), request.password());
     }
 
     public static User toUser(UserUpdateRequest request) {
-        var user = new User();
-        user.setId(request.id());
-        user.setUsername(request.username());
-        user.setPassword(request.password());
-        return user;
+        return new User(request.id(), request.username(), request.password());
     }
 
     public static UserResponse toResponse(User user) {

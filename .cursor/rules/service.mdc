@@ -1,6 +1,6 @@
 ---
 description: Сервисный слой — entity, транзакции, чужие сущности
-globs: **/service/**/*.java
+globs: **/service/**/*.{java,kt}
 alwaysApply: false
 ---
 
@@ -12,7 +12,7 @@ alwaysApply: false
 - Конструкторная инъекция без `@Autowired` / Lombok: `private final` поля, зависимость от интерфейсов.
 - Методы: `create`, `update`, `getById`, `getBy{Field}`, `getAll`, `getAllBy{Field}`, `delete`. Не `find*` и не `Optional` наружу.
 - `@Transactional` на изменяющих методах; чтение — `@Transactional(readOnly = true)`. Не на контроллере.
-- Update: `id == null` → `IllegalArgumentException` → `findById` stored → `Entity.enrichForUpdate(incoming, stored)` → `save(stored)`.
+- Update: `id == null` → `IllegalArgumentException` → `findById` stored → `save(Entity.enrichForUpdate(incoming, stored))`.
 - Поиск: `orElseThrow` с `NoSuchElementException` и `String.format`, текст на английском: `"Tag not found by id: %d"`. Инварианты (занятое имя, бизнес-правило) — `IllegalArgumentException`.
 - **Javadoc** — на интерфейсе `{Entity}Service` (не на `*Impl`): краткое описание класса и каждого метода на русском; `@param` / `@return` / `@throws` по фактическому поведению. Эталон — `DishService`.
 
