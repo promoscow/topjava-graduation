@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.xpendence.topjavagraduation.config.security.JwtTokenFilter;
 import ru.xpendence.topjavagraduation.config.security.JwtTokenService;
+import ru.xpendence.topjavagraduation.controller.mcp.McpController;
 import ru.xpendence.topjavagraduation.entity.type.RoleType;
 
 @Configuration
@@ -51,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
+                        .requestMatchers(McpController.PATH).permitAll()
                         .requestMatchers("/admin/**").hasAuthority(RoleType.ADMIN.name())
                         .requestMatchers("/user/**").hasAuthority(RoleType.USER.name())
                         .anyRequest().authenticated()

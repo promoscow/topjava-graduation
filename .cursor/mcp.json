@@ -10,6 +10,9 @@
       "env": {
         "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
       }
+    },
+    "topjava": {
+      "url": "http://localhost:8080/mcp"
     }
   }
 }
